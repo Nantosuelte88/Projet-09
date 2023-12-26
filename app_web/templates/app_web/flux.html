@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Flux</h2>
+    <div class="flux">
+        <div class="buttons-flux">
+            <button onclick="window.location.href='{% url 'ticket' %}'">Demander une critique</button>
+            <button onclick="window.location.href='{% url 'review' %}'">Créer une critique</button>
+        </div>
+        {% for ticket in tickets %}
+        <div class="ticket">
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            {% if ticket.image %}
+                <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+            {% endif %}
+            <p>Créé le : {{ ticket.time_created }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

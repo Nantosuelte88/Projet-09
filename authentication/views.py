@@ -6,9 +6,9 @@ from django.views.generic import View
 from . import forms
 
 # à supprimer quand probleme de deconnexion resolu
-def logout_user(request):
-    logout(request)
-    return redirect('login')
+#def logout_user(request):
+ #   logout(request)
+  #  return redirect('login')
 
 
 def signup_page(request):

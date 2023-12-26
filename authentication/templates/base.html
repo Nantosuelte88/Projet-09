@@ -1,14 +1,30 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>LITRevu</title>
+    <link rel="stylesheet" href="{% static 'app_web/style.css' %}" />
 </head>
 <body>
-    <h1>LITRevu</h1>
-    {% block content %} {% endblock content %}
-    {% if user.is_authenticated %}
-        <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
+    <header>
+        <div class="logo">
+            <a href="{% url 'home' %}"><img src="/media/logo.png" alt="Logo de l'application LITRevu"></a>
+        </div>
+        {% if user.is_authenticated %}
+        <nav>
+            <a href="{% url 'flux' %}">Flux</a>
+            <a href="{% url 'posts' %}">Posts</a>
+            <a href="{% url 'subscription' %}">Abonnements</a>
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Se déconnecter</button>
+        </form>
+        </nav>
     {% endif %}
+    </header>
+    {% block content %} {% endblock content %}
+
 </body>
 </html>

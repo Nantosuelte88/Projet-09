@@ -1,0 +1,60 @@
+* { background: grey}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Autres styles pour le conteneur du header */
+}
+
+.logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.logo img {
+    width: 8em;
+    height: auto;
+    /* Styles spécifiques pour le logo si nécessaire */
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
+    margin-left: 10px; /* Espacement entre les liens, ajustez selon vos besoins */
+}
+
+.flux{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons-flux {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 2em;
+}
+
+.buttons-flex button{
+    margin: 2em;
+}
+
+.ticket {
+    display: flex;
+    background-color: pink;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ticket img {
+    width: 12em;
+    height: auto;
+}
