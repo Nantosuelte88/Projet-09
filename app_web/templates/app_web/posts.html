@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Posts</h2>
-    {% for ticket in tickets %}
-        <div class="ticket">
-            <h3>{{ ticket.title }}</h3>
-            <p>{{ ticket.description }}</p>
-            {% if ticket.image %}
-                <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
-            {% endif %}
-            <p>Créé le : {{ ticket.time_created }}</p>
-        </div>
-    {% endfor %}
+    <h3>Mes Tickets :</h3>
+    <ul>
+        {% for ticket in user_tickets %}
+            <li>{{ ticket.title }} - {{ ticket.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Mes Reviews :</h3>
+    <ul>
+        {% for review in user_reviews %}
+            <li>{{ review.headline }} - {{ review.body }}</li>
+        {% endfor %}
+    </ul>
+
 {% endblock content %}

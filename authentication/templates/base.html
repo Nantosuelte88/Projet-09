@@ -22,7 +22,8 @@
             <button type="submit">Se déconnecter</button>
         </form>
         </nav>
-    {% endif %}
+        <p>Bonjour {{ request.user }}</p>
+        {% endif %}
     </header>
     {% block content %} {% endblock content %}
 
