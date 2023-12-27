@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div>
+    <div class="login_page">
         <div>
             <p>Inscrivez-vous maintenant</p>
-            <a href="{% url 'signup' %}">Inscrivez-vous maintenant</a>
+            <button onclick="window.location.href='{% url 'signup' %}'">S'inscrire</button>
         </div>
         <div>
-            <p>{{ message }}</p>
             <p>Connectez-vous</p>
             <form method="post">
                 {{ form.as_p }}

@@ -10,7 +10,12 @@ from . import models
 
 @login_required
 def home(request):
-    return render(request, 'app_web/home.html')
+    user = request.user
+    context = {
+        'username': user.username,
+        'avatar': user.avatar.url if user.avatar else None,
+    }
+    return render(request, 'app_web/home.html', context=context)
 
 
 @login_required
@@ -27,6 +32,8 @@ def ticket_demand(request):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
+            print(ticket.image.path)
+            ticket.resize_image()
             messages.success(request, 'Ticket créé avec succès!')
             return redirect('home')
         else:

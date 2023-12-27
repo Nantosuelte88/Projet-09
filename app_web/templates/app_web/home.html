@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Home</h2>
+    <h3>Bienvenue, {{ username }}!</h3>
+    {% if avatar %}
+        <img src="{{ avatar }}" alt="Avatar de {{ username }}">
+    {% else %}
+        <p>Pas d'avatar pour cet utilisateur</p>
+    {% endif %}
+    <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
+
 {% endblock content %}

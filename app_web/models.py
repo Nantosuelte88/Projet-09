@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
 
+from PIL import Image
+
 
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
@@ -11,6 +13,13 @@ class Ticket(models.Model):
 
     image = models.ImageField(null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
+
+    IMAGE_MAX_SIZE = (800, 800)
+
+    def resize_image(self):
+        image = Image.open(self.image)
+        image.thumbnail(self.IMAGE_MAX_SIZE)
+        image.save(self.image.path)
 
     def __str__(self):
         return self.title

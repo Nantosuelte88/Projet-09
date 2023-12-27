@@ -27,6 +27,52 @@ nav a {
     margin-left: 10px; /* Espacement entre les liens, ajustez selon vos besoins */
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    position: relative;
+    margin: 10px;
+    border-radius: 50%;  /* Ajoutez cela pour des avatars circulaires */
+    width: 40px;  /* Ajustez selon vos besoins */
+    height: 40px;  /* Ajustez selon vos besoins */
+}
+
+/* Style de la div cachée (pseudo fenêtre modale) */
+.avatar-options {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    right: 1%;
+    top: 20%;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #f00;
+}
+
+/* Afficher la div cachée lorsqu'elle est activée */
+.avatar-options:target {
+    display: block;
+}
+
+
+
+.login_page {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+    margin: 15%
+}
+
+.login_page div{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+
 .flux{
     display: flex;
     flex-direction: column;
@@ -48,6 +94,8 @@ nav a {
 .ticket {
     display: flex;
     background-color: pink;
+    border: 2px solid black;
+    margin: 5px;
     width: 50%;
     justify-content: center;
     align-items: center;
@@ -55,6 +103,6 @@ nav a {
 }
 
 .ticket img {
-    width: 12em;
+    width: 50%;
     height: auto;
 }

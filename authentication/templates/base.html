@@ -17,12 +17,26 @@
             <a href="{% url 'flux' %}">Flux</a>
             <a href="{% url 'posts' %}">Posts</a>
             <a href="{% url 'subscription' %}">Abonnements</a>
-            <form action="{% url 'logout' %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit">Se déconnecter</button>
-        </form>
         </nav>
-        <p>Bonjour {{ request.user }}</p>
+                <div class="user-info">
+            {% if user.avatar %}
+                <a href="#avatarOptions"><img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar"></a>
+            {% else %}
+                <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="Avatar par défaut"></a>
+            {% endif %}
+            <!-- Div cachée -->
+            <div class="avatar-options" id="avatarOptions">
+                <button onclick="window.location.href='#'">Fermer</button>
+                <p>Bonjour {{ user.username }}</p>
+                <p>Options supplémentaires</p>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Se déconnecter</button>
+                </form>
+                <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
+                <!-- Ajoutez d'autres liens ou éléments selon vos besoins -->
+            </div>
+        </div>
         {% endif %}
     </header>
     {% block content %} {% endblock content %}
