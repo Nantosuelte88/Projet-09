@@ -4,14 +4,21 @@
     <h3>Mes Tickets :</h3>
     <ul>
         {% for ticket in user_tickets %}
-            <li>{{ ticket.title }} - {{ ticket.description }}</li>
+            <li>
+                {{ ticket.title }} - {{ ticket.description }}
+                {% if ticket.review_set.all %}
+                    <p>Une critique existe déjà pour ce ticket.</p>
+                {% else %}
+                    <a href="{% url 'review' ticket.id %}">Ajouter une critique</a>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 
     <h3>Mes Reviews :</h3>
     <ul>
         {% for review in user_reviews %}
-            <li>{{ review.headline }} - {{ review.body }}</li>
+            <li>{{ review.headline }} - {{ review.body }} - {{ review.ticket }}</li>
         {% endfor %}
     </ul>
 

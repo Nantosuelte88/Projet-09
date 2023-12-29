@@ -6,16 +6,20 @@
             <button onclick="window.location.href='{% url 'ticket' %}'">Demander une critique</button>
             <button onclick="window.location.href='{% url 'ticketreview' %}'">Créer une critique</button>
         </div>
-        {% for ticket in tickets %}
+        {% for f in flux %}
         <div class="ticket">
-            <h3>{{ ticket.title }}</h3>
-            <p>{{ ticket.description }}</p>
-            {% if ticket.image %}
-                <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+            <h3>{{ f.title }}</h3>
+            <p>{{ f.description }}</p>
+            {% if f.image %}
+                <img src="{{ f.image.url }}" alt="{{ f.title }}">
             {% endif %}
-            <p>Créé le : {{ ticket.time_created }}</p>
+            <p>Créé le : {{ f.time_created }}</p>
+            {% if f.review_set.all %}
+                <p>Une critique existe déjà pour ce ticket.</p>
+            {% else %}
+                <a href="{% url 'review' f.id %}">Ajouter une critique</a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
-
 {% endblock content %}

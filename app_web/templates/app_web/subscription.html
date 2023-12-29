@@ -1,4 +1,71 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>Abonnements</h2>
-{% endblock content %}
+    <h2>Utilisateurs suivis</h2>
+    {% if following_users %}
+        <ul>
+            {% for user in following_users %}
+                <li>
+                    {{ user.username }}
+                    <form method="post" action="{% url 'unfollow' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_to_unfollow" value="{{ user.id }}">
+                        <button type="submit">Ne plus suivre</button>
+                    </form>
+                    <form method="post" action="{% url 'block_user' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_to_block" value="{{ user.id }}">
+                        <button type="submit">bloquer debloquer</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Vous ne suivez actuellement personne.</p>
+    {% endif %}
+
+    <h2>Personnes qui vous suivent</h2>
+    {% if followers %}
+        <ul>
+            {% for user in followers %}
+                <li>{{ user.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Personne ne vous suit actuellement.</p>
+    {% endif %}
+
+
+   <h2>Utilisateurs bloqués</h2>
+    {% if blocked_users %}
+        <ul>
+            {% for user in blocked_users %}
+                <li>
+                    {{ user.username }}
+                    <form method="post" action="{% url 'unblock_user' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_to_unblock" value="{{ user.id }}">
+                        <button type="submit">Débloquer</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+    <p>Vous n'avez actuellement bloqué personne.</p>
+{% endif %}
+
+    <h2>Ajouter un utilisateur suivi</h2>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post" action="{% url 'subscription' %}">
+        {% csrf_token %}
+        <label for="id_username_to_follow">Nom d'utilisateur :</label>
+        <input type="text" name="username_to_follow" id="id_username_to_follow" required>
+        <button type="submit">Suivre</button>
+    </form>
+{% endblock %}

@@ -29,9 +29,14 @@ urlpatterns = [
     path('flux/', app_web.views.flux, name='flux'),
     path('ticket_page/', app_web.views.ticket_demand, name='ticket'),
     path('ticket_review/', app_web.views.ticket_and_review, name='ticketreview'),
-    path('review/', app_web.views.review_add, name='review'),
+    #path('review/', app_web.views.review_add, name='review'),
+    path('review/<int:ticket_id>/', app_web.views.review_add, name='review'),
     path('posts/', app_web.views.posts_view, name='posts'),
     path('subscription/', app_web.views.subscription, name='subscription'),
+    path('unfollow/', app_web.views.unfollow, name='unfollow'),
+    path('block_user/', app_web.views.block_user, name='block_user'),
+    path('unblock_user/', app_web.views.unblock_user, name='unblock_user'),
+
 ]
 
 if settings.DEBUG:

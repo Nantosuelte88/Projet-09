@@ -12,6 +12,8 @@ class TicketPostForm(forms.ModelForm):
 
 
 class ReviewPostForm(forms.ModelForm):
+    ticket_id = forms.IntegerField(widget=forms.HiddenInput())
+
     class Meta:
         model = Review
-        fields = ['rating', 'headline', 'body']
+        fields = ['ticket_id', 'rating', 'headline', 'body']

@@ -14,10 +14,12 @@ def signup_page(request):
         form = forms.SignupForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
-            user.avatar = form.cleaned_data['avatar']
+            if 'avatar' in request.FILES:
+                user.avatar = request.FILES['avatar']
             user.save()
-            print(user.avatar.path)
-            user.resize_image()
+            if user.avatar:
+                user.resize_image()
+
             login(request, user)
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:

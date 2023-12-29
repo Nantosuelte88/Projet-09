@@ -37,17 +37,36 @@ class Review(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
 
 
-class UserFollows(models.Model):
-    # Your UserFollows model definition goes here
+class BlockedUser(models.Model):
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='following')
+        related_name='blocked_users'
+    )
+
+    blocked_user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='blocking_users'
+    )
+
+    can_access_tickets = models.BooleanField(default=False)
+    can_access_reviews = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'blocked_user', )
+
+
+class UserFollows(models.Model):
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='user_follows')
 
     followed_user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="followers"
+        related_name="followers",
     )
 
     class Meta:
