@@ -57,6 +57,15 @@ nav a {
     display: block;
 }
 
+.avatar {
+    max-height: 15em;
+    background-color: pink;
+}
+
+li {
+    list-style: none;
+    padding: 5px;
+}
 
 
 .login_page {
@@ -100,9 +109,19 @@ nav a {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 10px;
+    margin: 10px;
 }
 
 .ticket img {
     width: 50%;
     height: auto;
+}
+
+.rating {
+    font-size: 24px; /* Ajustez la taille des étoiles selon vos besoins */
+}
+
+.star {
+    color: gold; /* Couleur des étoiles pleines */
 }

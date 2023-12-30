@@ -6,20 +6,24 @@
             <button onclick="window.location.href='{% url 'ticket' %}'">Demander une critique</button>
             <button onclick="window.location.href='{% url 'ticketreview' %}'">Créer une critique</button>
         </div>
-        {% for f in flux %}
-        <div class="ticket">
-            <h3>{{ f.title }}</h3>
-            <p>{{ f.description }}</p>
-            {% if f.image %}
-                <img src="{{ f.image.url }}" alt="{{ f.title }}">
-            {% endif %}
-            <p>Créé le : {{ f.time_created }}</p>
-            {% if f.review_set.all %}
-                <p>Une critique existe déjà pour ce ticket.</p>
-            {% else %}
-                <a href="{% url 'review' f.id %}">Ajouter une critique</a>
-            {% endif %}
-        </div>
-        {% endfor %}
+        {% if flux_content %}
+            {% for f in flux_content %}
+                <div class="ticket">
+                    <h3>{{ f.title }}</h3>
+                    <p>Créé le : {{ f.time_created }}</p>
+                    <p>{{ f.description }}</p>
+                    {% if f.image %}
+                        <img src="{{ f.image.url }}" alt="{{ f.title }}">
+                    {% endif %}
+                    {% if f.review_set.all %}
+                        <p>Une critique existe déjà pour ce ticket.</p>
+                    {% else %}
+                        <button onclick="window.location.href='{% url 'review' f.id %}'" class="add_review">Créer une critique</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun contenu dans votre flux pour le moment.</p>
+        {% endif %}
     </div>
 {% endblock content %}

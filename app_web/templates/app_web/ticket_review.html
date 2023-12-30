@@ -7,5 +7,12 @@
         {{ review_form.as_p }}
         <button type="submit" >Publier</button>
     </form>
+    {% if review_form.errors %}
+        <ul class="errorlist">
+            {% for field, errors in review_form.errors.items %}
+                <li>{{ field }}: {{ errors.0 }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock content %}

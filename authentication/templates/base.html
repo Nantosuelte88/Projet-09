@@ -4,7 +4,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>LITRevu</title>
+    <title>{% block title %}{% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'app_web/style.css' %}" />
 </head>
 <body>
@@ -22,7 +22,7 @@
             {% if user.avatar %}
                 <a href="#avatarOptions"><img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar"></a>
             {% else %}
-                <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="Avatar par défaut"></a>
+                <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="{{ user.username }} Avatar"></a>
             {% endif %}
             <!-- Div cachée -->
             <div class="avatar-options" id="avatarOptions">

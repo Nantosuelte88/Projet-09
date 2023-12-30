@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Feed</h2>
+  {% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        {% include 'ticket_snippet.html' %}
+    {% elif post.content_type == 'REVIEW' %}
+        {% include 'review_snippet.html' %}
+    {% endif %}
+  {% endfor %}
+
+{% endblock content %}

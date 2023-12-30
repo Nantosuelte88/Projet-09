@@ -1,7 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from itertools import chain
+from django.db.models import CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TicketPostForm, ReviewPostForm
 from .models import Ticket, Review, UserFollows, BlockedUser
+from .utils import get_star_rating
 
 from authentication.models import User
 
@@ -98,16 +101,19 @@ def ticket_and_review(request):
     ticket_form = TicketPostForm()
     review_form = ReviewPostForm()
     if request.method == 'POST':
-        ticket_form = TicketPostForm(request.POST)
+        ticket_form = TicketPostForm(request.POST, request.FILES)
         review_form = ReviewPostForm(request.POST, request.FILES)
         if any([ticket_form.is_valid(), review_form.is_valid()]):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
+            ticket.resize_image()
+
             review = review_form.save(commit=False)
             review.ticket = ticket
             review.user = request.user
             review.save()
+
             messages.success(request, 'TicketCritique créé avec succès!')
             return redirect('home')
         else:
@@ -126,7 +132,6 @@ def ticket_and_review(request):
 def posts_view(request):
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
-    #user_reviews = Review.objects.filter(ticket__user=request.user)    ??
 
     context = {
         'user_tickets': user_tickets,
@@ -197,7 +202,7 @@ def block_user(request):
             messages.success(request, f"Vous ne suivez plus {user_to_block.username}.")
 
         else:
-            messages.success(request, f"Il ne vous suiviez pas {user_to_block.username}.")
+            messages.success(request, f"Vous ne suiviez pas {user_to_block.username}.")
 
         BlockedUser.objects.create(user=request.user, blocked_user=user_to_block)
         messages.success(request, f"Vous avez bloqué l'utilisateur {user_to_block.username}.")
@@ -217,3 +222,8 @@ def unblock_user(request):
             BlockedUser.objects.filter(user=request.user, blocked_user=user_to_unblock).delete()
 
     return redirect('subscription')
+
+
+@login_required
+def legal_mention(request):
+    return render(request, 'app_web/mentions_legales.html')

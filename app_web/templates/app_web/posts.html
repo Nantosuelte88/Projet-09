@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Posts</h2>
+
     <h3>Mes Tickets :</h3>
-    <ul>
+    <ul class="ticket">
         {% for ticket in user_tickets %}
             <li>
-                {{ ticket.title }} - {{ ticket.description }}
+                <h5>{{ ticket.title }}</h5>
+                <p>{{ ticket.time_created }}</p>
+                {% if ticket.image %}
+                    <img src="{{ ticket.image.url }}" alt="couverture de {{ ticket.title }}" class="cover">
+                {% endif %}
+                <p class="desc">{{ ticket.description }}</p>
                 {% if ticket.review_set.all %}
                     <p>Une critique existe déjà pour ce ticket.</p>
                 {% else %}
-                    <a href="{% url 'review' ticket.id %}">Ajouter une critique</a>
+                    <a href="{% url 'review' ticket.id %}" class="btn-add-review">Ajouter une critique</a>
                 {% endif %}
             </li>
         {% endfor %}
@@ -18,7 +24,21 @@
     <h3>Mes Reviews :</h3>
     <ul>
         {% for review in user_reviews %}
-            <li>{{ review.headline }} - {{ review.body }} - {{ review.ticket }}</li>
+            <li class="ticket">
+                <p>DEBUG: Review Loop</p>
+                <h5> {{ review.ticket.title }} </h5>
+                <p class="time">{{ review.ticket.time_created }}</p>
+                {% if review.ticket.image %}
+                    <img src="{{ review.ticket.image.url }}" alt="couverture de {{ review.ticket.title }}" class="cover">
+                {% endif %}
+                <p class="desc">{{ review.ticket.description }}</p>
+                <h4> {{ review.headline }} </h4>
+                <div class="rating">
+                    <p>Rating: {{ review.rating }} étoiles</p>
+
+                </div>
+                <p> {{ review.body }} </p>
+            </li>
         {% endfor %}
     </ul>
 

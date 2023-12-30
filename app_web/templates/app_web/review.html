@@ -2,7 +2,7 @@
 {% block content %}
     <h2>Créer une critique</h2>
     <form method="post">
-        {{ review_add_form.as_p }}
+        {{ form.as_p }}
         {% csrf_token %}
         <button type="submit" >Publier</button>
     </form>

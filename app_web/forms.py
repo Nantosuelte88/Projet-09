@@ -17,3 +17,8 @@ class ReviewPostForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['ticket_id', 'rating', 'headline', 'body']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Ajoutez ici votre logique de validation personnalisée si nécessaire
+        return cleaned_data

@@ -11,6 +11,7 @@ class User(AbstractUser):
     IMAGE_MAX_SIZE = (800, 800)
 
     def resize_image(self):
-        image = Image.open(self.avatar)
-        image.thumbnail(self.IMAGE_MAX_SIZE)
-        image.save(self.avatar.path)
+        if self.avatar and self.avatar.storage.exists(self.avatar.name):
+            image = Image.open(self.avatar)
+            image.thumbnail(self.IMAGE_MAX_SIZE)
+            image.save(self.avatar.path)
