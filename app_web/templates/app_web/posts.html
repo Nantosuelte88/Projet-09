@@ -35,9 +35,20 @@
                 <h4> {{ review.headline }} </h4>
                 <div class="rating">
                     <p>Rating: {{ review.rating }} étoiles</p>
-
                 </div>
                 <p> {{ review.body }} </p>
+                {% if review.user == request.user %}
+                    <form method="post" action="{% url 'review_delete' review.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete_review">Supprimer la critique</button>
+                    </form>
+                    <form method="post" action="{% url 'review_update' review.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="update_review">Modifier la critique</button>
+                    </form>
+                {% else %}
+                    <p>Vous ne pouvez pas supprimer cette critique</p>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>

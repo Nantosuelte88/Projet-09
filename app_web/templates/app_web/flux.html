@@ -17,6 +17,7 @@
                     {% endif %}
                     {% if f.review_set.all %}
                         <p>Une critique existe déjà pour ce ticket.</p>
+                        <h4>{{ f.review_set.title }}</h4>
                     {% else %}
                         <button onclick="window.location.href='{% url 'review' f.id %}'" class="add_review">Créer une critique</button>
                     {% endif %}

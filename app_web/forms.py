@@ -20,5 +20,4 @@ class ReviewPostForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        # Ajoutez ici votre logique de validation personnalisée si nécessaire
         return cleaned_data
