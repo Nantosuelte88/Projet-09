@@ -93,7 +93,7 @@ def review_add(request, ticket_id):
         'ticket': ticket,
     }
 
-    return render(request, 'app_web/review.html', context=context)
+    return render(request, 'app_web/review_edit.html', context=context)
 
 
 @login_required
@@ -109,41 +109,45 @@ def review_delete(request, review_id):
         review.delete()
         messages.success(request, 'Critique supprimé avec succès!')
 
-    #context = {
-    #    'review': review,
-    #}
-
     return redirect('flux')
-    #return render(request, 'app_web/review_delete.html', context=context)
 
 
 @login_required
 def review_update(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
+    ticket = review.ticket
+    print('review = ', review)
+    print('ticket =', ticket)
 
     if request.user != review.user:
-        messages.warning(request,'Vous n\'êtes pas autorisé à modifier cette critique!')
+        print('Pas le bon user')
+        messages.warning(request, 'Vous n\'êtes pas autorisé à modifier cette critique!')
         return redirect('flux')
-
-    if request.method == 'POST':
-        form = ReviewPostForm(request.POST, request.FILES, instance=review)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Critique modifié avec succès!')
-            return redirect('flux')
-        else:
-            messages.error(request, 'Erreur lors de la modification de la critique. '
-                                    'Veuillez corriger les erreurs dans le formulaire.')
     else:
-        form = ReviewPostForm(instance=review)
+        print('Bon user')
+        form = ReviewPostForm(request.POST, instance=review)
+        context = {
+            'form': form,
+            'review': review,
+            'ticket': ticket,
+        }
 
-    context = {
-        'form': form,
-        'review': review,
-        'ticket_id': review.ticket,
-    }
+        if request.method == 'POST':
+            print('C\'est un POST')
+            if form.is_valid():
+                print('formulaire valide')
+                review.user = request.user
+                review.ticket = ticket
+                form.save()
+                messages.success(request, 'Critique modifié avec succès!')
+                return redirect('flux')
+            else:
+                print('formulaire non valide')
+                messages.error(request, 'Erreur lors de la modification de la critique. '
+                                        'Veuillez corriger les erreurs dans le formulaire.')
 
-    return render(request, 'app_web/review.html', context=context)
+    return render(request, 'app_web/review_edit.html', context=context)
+
 
 @login_required
 def ticket_and_review(request):

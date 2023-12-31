@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h3>Détails du Ticket</h3>
+    <h2>Détails du Ticket</h2>
     <p>Titre du Ticket: {{ ticket.title }}</p>
     {% if ticket.image %}
         <img src="{{ ticket.image.url }}" alt="couverture de {{ ticket.title }}" class="cover">
     {% endif %}
     <p>Description du Ticket: {{ ticket.description }}</p>
     {% if review %}
-        <h2>Modifier une critique</h2>
+        <h3>Modifier une critique</h3>
+        <h5>Votre critique actuelle</h5>
+        <p>note : {{ review.rating }}</p>
+        <p>titre de la critique : {{ review.headline }}</p>
+        <p>contenu de la critique : {{ review.body }}</p>
         <form method="post" action="{% url 'review_update' review.id %}">
-            {{ form.as_p }}
             {% csrf_token %}
+            {{ form.as_p }}
             <button type="submit">Modifier</button>
         </form>
     {% else %}
         <h2>Créer une critique</h2>
         <form method="post" action="{% url 'review' ticket.id %}">
-            {{ form.as_p }}
             {% csrf_token %}
+            {{ form.as_p }}
             <button type="submit">Publier ma critique</button>
         </form>
     {% endif %}

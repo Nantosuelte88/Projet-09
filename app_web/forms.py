@@ -12,11 +12,12 @@ class TicketPostForm(forms.ModelForm):
 
 
 class ReviewPostForm(forms.ModelForm):
-    ticket_id = forms.IntegerField(widget=forms.HiddenInput())
+    #ticket_id = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
         model = Review
-        fields = ['ticket_id', 'rating', 'headline', 'body']
+        #fields = ['ticket_id', 'rating', 'headline', 'body']
+        fields = ['rating', 'headline', 'body']
 
     def clean(self):
         cleaned_data = super().clean()

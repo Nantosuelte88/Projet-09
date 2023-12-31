@@ -42,10 +42,7 @@
                         {% csrf_token %}
                         <button type="submit" class="delete_review">Supprimer la critique</button>
                     </form>
-                    <form method="post" action="{% url 'review_update' review.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="update_review">Modifier la critique</button>
-                    </form>
+                    <a href="{% url 'review_update' review.ticket.id %}" class="btn-add-review">Modifier ma critique</a>
                 {% else %}
                     <p>Vous ne pouvez pas supprimer cette critique</p>
                 {% endif %}
