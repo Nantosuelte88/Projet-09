@@ -125,3 +125,16 @@ li {
 .star {
     color: gold; /* Couleur des étoiles pleines */
 }
+
+.review {
+    display: flex;
+    background-color: blue;
+    border: 2px solid black;
+    margin: 5px;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px;
+}

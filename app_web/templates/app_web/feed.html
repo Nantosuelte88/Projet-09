@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
   <h2>Feed</h2>
-  {% for post in posts %}
-    {% if post.content_type == 'TICKET' %}
-        {% include 'ticket_snippet.html' %}
-    {% elif post.content_type == 'REVIEW' %}
-        {% include 'review_snippet.html' %}
+
+{% for post in posts %}
+    <p>quel type ? {{ post.post_type }}</p>
+    {% if post.post_type == 'TICKET' %}
+        {% include 'app_web/ticket_snippet.html' %}
+    {% elif post.post_type == 'REVIEW' %}
+        {% include 'app_web/review_snippet.html' %}
     {% endif %}
-  {% endfor %}
+{% endfor %}
 
 {% endblock content %}
+
+

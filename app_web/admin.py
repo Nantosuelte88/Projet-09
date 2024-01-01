@@ -7,14 +7,14 @@ from authentication.models import User
 
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'user', 'image', 'time_created')
+    list_display = ('id', 'title', 'description', 'user', 'image', 'time_created')
 
 
 admin.site.register(Ticket, TicketAdmin)
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('ticket', 'rating', 'headline', 'body','user', 'time_created')
+    list_display = ('id', 'ticket', 'rating', 'headline', 'body','user', 'time_created')
 
 
 admin.site.register(Review, ReviewAdmin)

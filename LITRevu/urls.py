@@ -30,6 +30,7 @@ urlpatterns = [
     path('delete_avatar/', authentication.views.delete_avatar, name='delete_avatar'),
     path('home/', app_web.views.home, name='home'),
     path('flux/', app_web.views.flux, name='flux'),
+    path('feed/', app_web.views.feed, name='feed'),
     path('ticket_page/', app_web.views.ticket_demand, name='ticket'),
     path('ticket_review/', app_web.views.ticket_and_review, name='ticketreview'),
     path('review/<int:ticket_id>/', app_web.views.review_add, name='review'),

@@ -1,22 +1,14 @@
-{% extends 'base.html' %}
-{% block content %}
-
-  <h2>Détails du Ticket</h2>
-  <p>Titre du Ticket: {{ ticket.title }}</p>
-  {% if ticket.image %}
-    <img src="{{ ticket.image.url }}" alt="couverture de {{ ticket.title }}" class="cover">
-  {% endif %}
-  <p>Description du Ticket: {{ ticket.description }}</p>
-
-  <h3>Modifier une critique</h3>
-  <h5>Votre critique actuelle</h5>
-  <p>note : {{ form.instance.rating }}</p>
-  <p>titre de la critique : {{ form.instance.headline }}</p>
-  <p>contenu de la critique : {{ form.instance.body }}</p>
-  <form method="post" action="{% url 'review_update' ticket.id %}">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Modifier</button>
-  </form>
-
-{% endblock %}
+        <div class="ticket">
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.user }}</p>
+            <p>{{ ticket.description }}</p>
+            {% if ticket.image %}
+                <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+            {% endif %}
+            <p>Créé le : {{ ticket.time_created }}</p>
+            {% if ticket.review_set.all %}
+                <p>Une critique existe déjà pour ce ticket.</p>
+            {% else %}
+                <a href="{% url 'review' ticket.id %}">Ajouter une critique</a>
+            {% endif %}
+        </div>

@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from itertools import chain
+from django.db.models import Q
 from django.db.models import CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TicketPostForm, ReviewPostForm
 from .models import Ticket, Review, UserFollows, BlockedUser
+from .utils import get_users_viewable_reviews, get_users_viewable_tickets
 from .utils import get_star_rating
 
 from authentication.models import User
@@ -39,6 +41,35 @@ def flux(request):
     flux_content.sort(key=lambda x: x.time_created, reverse=True)
 
     return render(request, 'app_web/flux.html', {'flux_content': flux_content})
+
+
+@login_required
+def feed(request):
+    # Utilisateurs suivis par l'utilisateur connecté
+    following_users = request.user.following.all()
+
+    # Billets des utilisateurs suivis
+    tickets_followed = Ticket.objects.filter(user__in=following_users)
+
+    # Avis des utilisateurs suivis
+    reviews_followed = Review.objects.filter(user__in=following_users)
+
+    # Avis en réponse aux billets de l'utilisateur connecté
+    reviews_in_response = Review.objects.filter(ticket__user=request.user)
+
+    # Billets et avis de l'utilisateur connecté
+    user_tickets = Ticket.objects.filter(user=request.user)
+    user_reviews = Review.objects.filter(user=request.user)
+
+    posts = [{'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed] + \
+            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_followed] + \
+            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response] + \
+            [{'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets] + \
+            [{'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews]
+
+    posts.sort(key=lambda x: x['post'].time_created, reverse=True)
+
+    return render(request, 'app_web/feed.html', {'posts': posts})
 
 
 @login_required
@@ -217,7 +248,7 @@ def subscription(request):
                 if created:
                     messages.success(request, f"Vous suivez maintenant {user_to_follow.username}.")
                 else:
-                    messages.success(request, f"Vous ne suivez plus {user_to_follow.username}.")
+                    messages.success(request, f"Vous suivez déjà {user_to_follow.username}.")
         else:
             messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
 

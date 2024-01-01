@@ -1,0 +1,11 @@
+<p>debut snippet ticket</p>
+<div class="ticket">
+    <h3>{{ post.post.title }}</h3>
+    <p>{{ post.post.user }}</p>
+    <p>{{ post.post.description }}</p>
+    {% if post.post.image %}
+        <img src="{{ post.post.image.url }}" alt="{{ post.post.title }}">
+    {% endif %}
+    <p>Créé le : {{ post.post.time_created }}</p>
+</div>
+<p>fin ticket</p>
