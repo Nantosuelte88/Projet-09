@@ -120,7 +120,7 @@ li {
 }
 
 .ticket img {
-    width: 50%;
+    max-width: 25em;
     height: auto;
 }
 
@@ -146,6 +146,10 @@ li {
 }
 
 .review img {
-    width: 50%;
+    max-width: 25em;
     height: auto;
+}
+
+.in {
+    border: 2px solid red;
 }

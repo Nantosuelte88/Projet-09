@@ -1,24 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
   <h2>Feed</h2>
-
+  <div class="buttons-flux">
+      <button onclick="window.location.href='{% url 'ticket' %}'">Demander une critique</button>
+      <button onclick="window.location.href='{% url 'ticketreview' %}'">Créer une critique</button>
+  </div>
   {% for post in posts %}
     {% if post.post_type == 'TICKET' %}
       <div class="ticket">
       {% include 'app_web/ticket_snippet.html' with ticket=post.post %}
       {% if post.post.review_set.all %}
-        {% for review in post.post.review_set.all %}
-          {% include 'app_web/review_snippet.html' %}
-        {% endfor %}
-      {% endif %}
+        <div class="in">
+          {% for review in post.post.review_set.all %}
+            {% include 'app_web/review_snippet.html' %}
+          {% endfor %}
         </div>
+        {% endif %}
+      </div>
 
     {% elif post.post_type == 'REVIEW' %}
       <div class="review">
       <p>{{ post.post }}</p>
       {% include 'app_web/review_snippet.html' with review=post.post %}
-      <p> TCIKET : {{ post.post.ticket }}</p>
-        {% include 'app_web/ticket_snippet.html' with ticket=post.post.ticket %}
+        <div class="in">
+          <p> TCIKET : {{ post.post.ticket }}</p>
+          {% include 'app_web/ticket_snippet.html' with ticket=post.post.ticket %}
+        </div>
+
       </div>
     {% endif %}
   {% endfor %}

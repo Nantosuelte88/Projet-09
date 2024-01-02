@@ -8,7 +8,18 @@
   {% endif %}
   <p>Créé le : {{ ticket.time_created }}</p>
   <p>_______________________________</p>
-
+    {% if ticket.review_set.all %}
+        <p>Une critique existe déjà pour ce ticket.</p>
+    {% else %}
+        <a href="{% url 'review' ticket.id %}">Ajouter une critique</a>
+    {% endif %}
+    {% if ticket.user == request.user %}
+        <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+            {% csrf_token %}
+            <button type="submit" class="delete">Supprimer la demande de critique</button>
+        </form>
+    <a href="{% url 'ticket_update' ticket.id %}" class="btn-add-review">Modifier ma demande de critique</a>
+    {% endif %}
 </div>
 
 <p>fin ticket</p>

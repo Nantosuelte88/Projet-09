@@ -94,6 +94,55 @@ def ticket_demand(request):
 
 
 @login_required
+def ticket_delete(request, ticket_id):
+    print(f"Deleting ticket with ID: {ticket_id}")
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+
+    if request.user != ticket.user:
+        messages.warning(request, 'Vous n\'êtes pas autorisé à supprimer cette critique!')
+        return redirect('feed')
+
+    if request.method == 'POST':
+        ticket.delete()
+        messages.success(request, 'Demande de critique supprimé avec succès!')
+
+    return redirect('feed')
+
+
+@login_required
+def ticket_update(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    print('ticket =', ticket)
+
+    if request.user != ticket.user:
+        print('Pas le bon user')
+        messages.warning(request, 'Vous n\'êtes pas autorisé à modifier cette critique!')
+        return redirect('feed')
+    else:
+        print('Bon user')
+        form = TicketPostForm(request.POST, instance=ticket)
+        context = {
+            'form': form,
+            'ticket': ticket,
+        }
+
+        if request.method == 'POST':
+            print('C\'est un POST')
+            if form.is_valid():
+                print('formulaire valide')
+                ticket.user = request.user
+                form.save()
+                messages.success(request, 'demande de critique modifié avec succès!')
+                return redirect('feed')
+            else:
+                print('formulaire non valide')
+                messages.error(request, 'Erreur lors de la modification de la critique. '
+                                        'Veuillez corriger les erreurs dans le formulaire.')
+
+    return render(request, 'app_web/ticket_page.html', context=context)
+
+
+@login_required
 def review_add(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
