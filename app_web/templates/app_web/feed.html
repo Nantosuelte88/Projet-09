@@ -2,15 +2,25 @@
 {% block content %}
   <h2>Feed</h2>
 
-{% for post in posts %}
-    <p>quel type ? {{ post.post_type }}</p>
+  {% for post in posts %}
     {% if post.post_type == 'TICKET' %}
-        {% include 'app_web/ticket_snippet.html' %}
+      <div class="ticket">
+      {% include 'app_web/ticket_snippet.html' with ticket=post.post %}
+      {% if post.post.review_set.all %}
+        {% for review in post.post.review_set.all %}
+          {% include 'app_web/review_snippet.html' %}
+        {% endfor %}
+      {% endif %}
+        </div>
+
     {% elif post.post_type == 'REVIEW' %}
-        {% include 'app_web/review_snippet.html' %}
+      <div class="review">
+      <p>{{ post.post }}</p>
+      {% include 'app_web/review_snippet.html' with review=post.post %}
+      <p> TCIKET : {{ post.post.ticket }}</p>
+        {% include 'app_web/ticket_snippet.html' with ticket=post.post.ticket %}
+      </div>
     {% endif %}
-{% endfor %}
+  {% endfor %}
 
 {% endblock content %}
-
-

@@ -1,21 +1,17 @@
 <p>debut review snippet</p>
-<div class="review">
-    {% include 'app_web/ticket_snippet.html' with post.ticket %}
-    <h3>{{ post.post.headline }}</h3>
-    {% if post.post.user == request.user %}
-        <p>Votre critique</p>
-    {% else %}
-        <p>{{ post.post.user }}</p>
-    {% endif %}
-    <p>{{ post.post.rating }}</p>
-    <p>Créé le : {{ post.post.time_created }}</p>
-    <p class="desc">{{ post.post.body }}</p>
-    {% if post.post.user == request.user %}
-        <form method="post" action="{% url 'review_delete' post.post.id %}">
+<div class="block-snippet">
+  <h3>{{ review.headline }}</h3>
+  <p>{{ review.user }}</p>
+  <p>{{ review.rating }}</p>
+  <p>Créé le : {{ review.time_created }}</p>
+  <p>{{ review.body }}</p>
+    {% if review.user == request.user %}
+        <form method="post" action="{% url 'review_delete' review.id %}">
             {% csrf_token %}
             <button type="submit" class="delete_review">Supprimer la critique</button>
         </form>
-    <a href="{% url 'review_update' post.post.ticket.id %}" class="btn-add-review">Modifier ma critique</a>
+    <a href="{% url 'review_update' review.ticket.id %}" class="btn-add-review">Modifier ma critique</a>
     {% endif %}
+
 </div>
 <p>fin review snippet</p>

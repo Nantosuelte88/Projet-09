@@ -47,7 +47,6 @@ nav a {
     z-index: 1;
     right: 1%;
     top: 20%;
-    background-color: #fefefe;
     padding: 20px;
     border: 1px solid #f00;
 }
@@ -55,6 +54,13 @@ nav a {
 /* Afficher la div cachée lorsqu'elle est activée */
 .avatar-options:target {
     display: block;
+}
+
+.block-avatar {
+    background-color: pink;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .avatar {
@@ -102,7 +108,7 @@ li {
 
 .ticket {
     display: flex;
-    background-color: pink;
+    background-color: green;
     border: 2px solid black;
     margin: 5px;
     width: 50%;
@@ -137,4 +143,9 @@ li {
     flex-direction: column;
     padding: 10px;
     margin: 10px;
+}
+
+.review img {
+    width: 50%;
+    height: auto;
 }

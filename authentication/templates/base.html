@@ -14,7 +14,7 @@
         </div>
         {% if user.is_authenticated %}
         <nav>
-            <a href="{% url 'flux' %}">Flux</a>
+            <a href="{% url 'feed' %}">Flux</a>
             <a href="{% url 'posts' %}">Posts</a>
             <a href="{% url 'subscription' %}">Abonnements</a>
         </nav>
@@ -26,15 +26,21 @@
             {% endif %}
             <!-- Div cachée -->
             <div class="avatar-options" id="avatarOptions">
-                <button onclick="window.location.href='#'">Fermer</button>
-                <p>Bonjour {{ user.username }}</p>
-                <p>Options supplémentaires</p>
-                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                <div class="block-avatar">
+                    <button onclick="window.location.href='#'">Fermer</button>
+                    <p>Bonjour {{ user.username }}</p>
+                    {% if user.avatar %}
+                    <button onclick="window.location.href='{% url 'update_avatar' %}'">Modifier mon avatar</button>
+                    <button onclick="window.location.href='{% url 'delete_avatar' %}'">Supprimer mon avatar</button>
+                    {% else %}
+                        <button onclick="window.location.href='{% url 'add_avatar' %}'">Ajouter un avatar</button>
+                    {% endif %}
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit">Se déconnecter</button>
-                </form>
-                <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
-                <!-- Ajoutez d'autres liens ou éléments selon vos besoins -->
+                    </form>
+                    <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
+                </div>
             </div>
         </div>
         {% endif %}

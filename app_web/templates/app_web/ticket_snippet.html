@@ -1,11 +1,14 @@
 <p>debut snippet ticket</p>
-<div class="ticket">
-    <h3>{{ post.post.title }}</h3>
-    <p>{{ post.post.user }}</p>
-    <p>{{ post.post.description }}</p>
-    {% if post.post.image %}
-        <img src="{{ post.post.image.url }}" alt="{{ post.post.title }}">
-    {% endif %}
-    <p>Créé le : {{ post.post.time_created }}</p>
+<div class="block-snippet">
+  <h3>{{ ticket.title }}</h3>
+  <p>{{ ticket.user }}</p>
+  <p>{{ ticket.description }}</p>
+  {% if ticket.image %}
+    <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+  {% endif %}
+  <p>Créé le : {{ ticket.time_created }}</p>
+  <p>_______________________________</p>
+
 </div>
+
 <p>fin ticket</p>
