@@ -4,7 +4,6 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Autres styles pour le conteneur du header */
 }
 
 .logo {
@@ -16,7 +15,6 @@ header {
 .logo img {
     width: 8em;
     height: auto;
-    /* Styles spécifiques pour le logo si nécessaire */
 }
 
 nav {
@@ -24,7 +22,7 @@ nav {
 }
 
 nav a {
-    margin-left: 10px; /* Espacement entre les liens, ajustez selon vos besoins */
+    margin-left: 10px;
 }
 
 .user-info {
@@ -35,12 +33,12 @@ nav a {
 .user-info img {
     position: relative;
     margin: 10px;
-    border-radius: 50%;  /* Ajoutez cela pour des avatars circulaires */
-    width: 40px;  /* Ajustez selon vos besoins */
-    height: 40px;  /* Ajustez selon vos besoins */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
 }
 
-/* Style de la div cachée (pseudo fenêtre modale) */
+/* Style de la div cachée */
 .avatar-options {
     display: none;
     position: fixed;
@@ -73,6 +71,28 @@ li {
     padding: 5px;
 }
 
+button {
+    border-radius: 5px;
+    padding: 0.5em;
+    margin: 5px 0 5px 0;
+}
+
+.btn-snippet {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3em 0 1em 0;
+}
+
+.btn-add {
+    padding: 1em;
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .login_page {
     display: flex;
@@ -102,30 +122,33 @@ li {
     padding: 2em;
 }
 
-.buttons-flex button{
-    margin: 2em;
+.buttons-flux button{
+    padding: 1em 4em 1em 4em;
+    margin: 0 5em 0px 5em;
 }
 
 .ticket {
-    display: flex;
-    background-color: green;
     border: 2px solid black;
     margin: 5px;
     width: 50%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 10px;
-    margin: 10px;
+    padding: 3em;
+    margin: 2em;
 }
 
 .ticket img {
     max-width: 25em;
     height: auto;
 }
-
+.time {
+    text-align: end;
+    font-size: 14px;
+    margin-top: -2em;
+}
 .rating {
-    font-size: 24px; /* Ajustez la taille des étoiles selon vos besoins */
+    font-size: 24px;
 }
 
 .star {

@@ -1,25 +1,29 @@
-<p>debut snippet ticket</p>
 <div class="block-snippet">
-  <h3>{{ ticket.title }}</h3>
-  <p>{{ ticket.user }}</p>
-  <p>{{ ticket.description }}</p>
-  {% if ticket.image %}
-    <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
-  {% endif %}
-  <p>Créé le : {{ ticket.time_created }}</p>
-  <p>_______________________________</p>
-    {% if ticket.review_set.all %}
-        <p>Une critique existe déjà pour ce ticket.</p>
-    {% else %}
-        <a href="{% url 'review' ticket.id %}">Ajouter une critique</a>
-    {% endif %}
     {% if ticket.user == request.user %}
-        <form method="post" action="{% url 'ticket_delete' ticket.id %}">
-            {% csrf_token %}
-            <button type="submit" class="delete">Supprimer la demande de critique</button>
-        </form>
-    <a href="{% url 'ticket_update' ticket.id %}" class="btn-add-review">Modifier ma demande de critique</a>
+        <p>Vous avez demandé une critique </p>
+    {% else %}
+          <p>{{ ticket.user }} a demandé une critique</p>
     {% endif %}
+    <p class="time">{{ ticket.time_created }}</p>
+    <h3>{{ ticket.title }}</h3>
+    <p>{{ ticket.description }}</p>
+    {% if ticket.image %}
+        <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+    {% endif %}
+    <div class="btn-snippet">
+        <div>
+            {% if ticket.user == request.user %}
+                <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete">Supprimer la demande de critique</button>
+                </form>
+                <button onclick="window.location.href='{% url 'ticket_update' ticket.id %}'">Modifier ma demande de critique</button>
+            {% endif %}
+        </div>
+        <div>
+            {% if not ticket.review_set.all %}
+                <button onclick="window.location.href='{% url 'review' ticket.id %}'" class="btn-add">Ajouter une critique</button>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
-<p>fin ticket</p>
