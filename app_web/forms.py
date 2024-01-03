@@ -12,13 +12,29 @@ class TicketPostForm(forms.ModelForm):
 
 
 class ReviewPostForm(forms.ModelForm):
-    #ticket_id = forms.IntegerField(widget=forms.HiddenInput())
-
     class Meta:
         model = Review
-        #fields = ['ticket_id', 'rating', 'headline', 'body']
         fields = ['rating', 'headline', 'body']
+        widgets = {
+            'rating': forms.RadioSelect(attrs={'class': 'rating-radio'}),
+        }
+
+    RATING_CHOICES = [
+        (0, '0'),
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+    ]
+
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'rating-radio'}),
+                               required=True)
 
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
+
+
+class RadioSelectWithInlineLabel(forms.RadioSelect):
+    template_name = 'app_web/widgets/radio_select_inline_label.html'

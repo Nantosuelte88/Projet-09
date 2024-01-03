@@ -167,11 +167,11 @@ button {
 .star {
     margin-left: 3em;
     font-size: 24px;
-    color: #ccc; /* Couleur des étoiles pleines */
+    color: black;
 }
 
 .star.filled {
-    color: #ffd700; /* Couleur des étoiles pleines, par exemple, jaune */
+    color: black;
 }
 
 

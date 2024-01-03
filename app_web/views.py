@@ -7,6 +7,7 @@ from .forms import TicketPostForm, ReviewPostForm
 from .models import Ticket, Review, UserFollows, BlockedUser
 from .utils import get_users_viewable_reviews, get_users_viewable_tickets
 from .utils import get_star_rating
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from authentication.models import User
 
@@ -75,6 +76,14 @@ def feed(request):
                 'filled_stars': range(post['post'].rating),
                 'empty_stars': range(5 - post['post'].rating)
             }
+        elif post['post_type'] == 'TICKET':
+            reviews = post['post'].review_set.all()
+            if reviews:
+                average_rating = sum(review.rating for review in reviews) / len(reviews)
+                post['stars'] = {
+                    'filled_stars': range(int(average_rating)),
+                    'empty_stars': range(int(5 - average_rating))
+                }
 
     return render(request, 'app_web/feed.html', {'posts': posts})
 
@@ -127,7 +136,7 @@ def ticket_update(request, ticket_id):
         return redirect('feed')
     else:
         print('Bon user')
-        form = TicketPostForm(request.POST, instance=ticket)
+        form = TicketPostForm(request.POST, request.FILES, instance=ticket)
         context = {
             'form': form,
             'ticket': ticket,
@@ -137,6 +146,16 @@ def ticket_update(request, ticket_id):
             print('C\'est un POST')
             if form.is_valid():
                 print('formulaire valide')
+                new_image = form.cleaned_data.get('image')
+                if new_image:
+                    print('il y a une nouvelle image')
+                    if isinstance(new_image, SimpleUploadedFile):
+                        if ticket.image:
+                            ticket.image.delete(save=False)
+                        ticket.image = new_image
+                else:
+                    print('pas de nouvelle image')
+
                 ticket.user = request.user
                 form.save()
                 messages.success(request, 'demande de critique modifié avec succès!')
@@ -145,6 +164,8 @@ def ticket_update(request, ticket_id):
                 print('formulaire non valide')
                 messages.error(request, 'Erreur lors de la modification de la critique. '
                                         'Veuillez corriger les erreurs dans le formulaire.')
+        else:
+            print('pas un POST')
 
     return render(request, 'app_web/ticket_page.html', context=context)
 

@@ -1,0 +1,6 @@
+{% for choice in widget.choices %}
+    <label for="{{ widget.id_for_label }}_{{ choice.0 }}">
+        <input type="{{ widget.type }}" name="{{ widget.name }}" value="{{ choice.0 }}" {% if widget.is_checked(choice.0) %}checked{% endif %}>
+        {{ choice.1 }}
+    </label><br>
+{% endfor %}
