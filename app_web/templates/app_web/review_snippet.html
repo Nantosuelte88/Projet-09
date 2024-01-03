@@ -1,17 +1,38 @@
-<p>debut review snippet</p>
 <div class="block-snippet">
-  <h3>{{ review.headline }}</h3>
-  <p>{{ review.user }}</p>
-  <p>{{ review.rating }}</p>
-  <p>Créé le : {{ review.time_created }}</p>
-  <p>{{ review.body }}</p>
-    {% if review.user == request.user %}
-        <form method="post" action="{% url 'review_delete' review.id %}">
-            {% csrf_token %}
-            <button type="submit" class="delete_review">Supprimer la critique</button>
-        </form>
-    <a href="{% url 'review_update' review.ticket.id %}" class="btn-add-review">Modifier ma critique</a>
-    {% endif %}
+    <div>
+        <div class="title-block">
+            {% if review.user == request.user %}
+                <p>Vous avez publié une critique</p>
+            {% else %}
+                <p>{{ review.user }} a publié une critique</p>
+            {% endif %}
+            <p class="time">{{ review.time_created }}</p>
+        </div>
+        <div class="rating">
+            <h3>{{ review.headline }}</h3>
+            <p class="star">{{ review.rating }}</p>
+            <div>
+                {% for star in post.stars.filled_stars %}
+                    <span class="star filled">&#9733;</span>
+                {% endfor %}
+                {% for star in post.stars.empty_stars %}
+                    <span class="star">&#9733;</span>
+                {% endfor %}
+            </div>
+        </div>
 
+    </div>
+    <p class="desc">{{ review.body }}</p>
+    <div class="btn-snippet">
+        <div>
+            {% if review.user == request.user %}
+                <form method="post" action="{% url 'review_delete' review.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete_review">Supprimer la critique</button>
+                </form>
+                <button onclick="window.location.href='{% url 'review_update' review.ticket.id %}'">Modifier ma critique</button>
+            {% endif %}
+        </div>
+    </div>
 </div>
-<p>fin review snippet</p>
+

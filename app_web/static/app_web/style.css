@@ -88,6 +88,22 @@ button {
     padding: 1em;
 }
 
+.title-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2em 0 2em 0;
+}
+
+.time {
+    font-size: 14px;
+}
+
+.desc {
+    margin-top: 2em;
+}
+
+
 .block {
     display: flex;
     flex-direction: column;
@@ -106,7 +122,6 @@ button {
     flex-direction: column;
     text-align: center;
 }
-
 
 .flux{
     display: flex;
@@ -127,7 +142,7 @@ button {
     margin: 0 5em 0px 5em;
 }
 
-.ticket {
+.ticket, .review {
     border: 2px solid black;
     margin: 5px;
     width: 50%;
@@ -138,41 +153,29 @@ button {
     margin: 2em;
 }
 
-.ticket img {
+.ticket img, .review img {
     max-width: 25em;
     height: auto;
 }
-.time {
-    text-align: end;
-    font-size: 14px;
-    margin-top: -2em;
-}
+
+
 .rating {
-    font-size: 24px;
-}
-
-.star {
-    color: gold; /* Couleur des étoiles pleines */
-}
-
-.review {
     display: flex;
-    background-color: blue;
-    border: 2px solid black;
-    margin: 5px;
-    width: 50%;
-    justify-content: center;
     align-items: center;
-    flex-direction: column;
-    padding: 10px;
-    margin: 10px;
+    justify-content: flex-start;
+}
+.star {
+    margin-left: 3em;
+    font-size: 24px;
+    color: #ccc; /* Couleur des étoiles pleines */
 }
 
-.review img {
-    max-width: 25em;
-    height: auto;
+.star.filled {
+    color: #ffd700; /* Couleur des étoiles pleines, par exemple, jaune */
 }
+
 
 .in {
-    border: 2px solid red;
+    width: auto;
+    border: 2px solid black;
 }

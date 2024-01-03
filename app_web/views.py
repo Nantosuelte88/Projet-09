@@ -69,6 +69,13 @@ def feed(request):
 
     posts.sort(key=lambda x: x['post'].time_created, reverse=True)
 
+    for post in posts:
+        if post['post_type'] == 'REVIEW':
+            post['stars'] = {
+                'filled_stars': range(post['post'].rating),
+                'empty_stars': range(5 - post['post'].rating)
+            }
+
     return render(request, 'app_web/feed.html', {'posts': posts})
 
 

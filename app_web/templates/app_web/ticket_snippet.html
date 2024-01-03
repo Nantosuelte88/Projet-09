@@ -1,12 +1,17 @@
 <div class="block-snippet">
-    {% if ticket.user == request.user %}
-        <p>Vous avez demandé une critique </p>
-    {% else %}
-          <p>{{ ticket.user }} a demandé une critique</p>
-    {% endif %}
-    <p class="time">{{ ticket.time_created }}</p>
-    <h3>{{ ticket.title }}</h3>
-    <p>{{ ticket.description }}</p>
+    <div >
+        <div class="title-block">
+            {% if ticket.user == request.user %}
+                <p>Vous avez demandé une critique</p>
+            {% else %}
+                  <p>{{ ticket.user }} a demandé une critique</p>
+            {% endif %}
+            <p class="time">{{ ticket.time_created }}</p>
+        </div>
+
+        <h3>{{ ticket.title }}</h3>
+    </div>
+    <p class="desc">{{ ticket.description }}</p>
     {% if ticket.image %}
         <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
     {% endif %}
