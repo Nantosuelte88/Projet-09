@@ -53,7 +53,7 @@ def add_avatar(request):
                     if resize_image(image_path):
                         # Si le redimensionnement réussit, sauvegarder le modèle
                         user.save()
-                        return redirect('home')
+                        return redirect('feed')
                 else:
                     messages.error(request, "view add_avatar")
                     messages.error(request, "Erreur lors du redimensionnement de l'image.")
@@ -73,7 +73,7 @@ def update_avatar(request):
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
 
         if not request.FILES:
-            return redirect('home')
+            return redirect('feed')
         else:
             if form.is_valid():
                 user = form.save(commit=False)
@@ -84,7 +84,7 @@ def update_avatar(request):
                     if resize_image(image_path):
                         # Si le redimensionnement réussit, sauvegarder le modèle
                         user.save()
-                        return redirect('home')
+                        return redirect('feed')
                 else:
                     messages.error(request, "view update_avatar")
                     messages.error(request, "Erreur lors du redimensionnement de l'image.")

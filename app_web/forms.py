@@ -1,8 +1,24 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django import forms
 from .models import Ticket, Review
+from django.utils.safestring import mark_safe
+from django.forms.widgets import ClearableFileInput
+from django.utils.html import format_html
 
 from . import models
+
+
+class CustomImagePreviewWidget(ClearableFileInput):
+    template_name = 'app_web/widgets/custom_image_preview_widget.html'
+
+    def render(self, name, value, attrs=None, renderer=None):
+        html = super().render(name, value, attrs, renderer)
+        if value and hasattr(value, "url"):
+            return format_html(
+                '<img src="{}" alt="{}" class="img-form">{}</label>',
+                value.url, value.name, html
+            )
+        return html
 
 
 class TicketPostForm(forms.ModelForm):

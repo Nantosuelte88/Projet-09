@@ -1,53 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Posts</h2>
+<h2>Vos Posts</h2>
+<div class="msg">
+  <ul class="messages">
+      {% for message in messages %}
+          <li>
+              {% if message.tags %}
+                  {{ message }}
+              {% endif %}
+          </li>
+      {% endfor %}
+  </ul>
+</div>
+<div class="block">
+  {% for post in posts %}
+    {% if post.post_type == 'TICKET' %}
+        <div class="ticket">
+        {% if post.post.review_set.all %}
+          <div class="in review">
+            {% for review in post.post.review_set.all %}
+              {% include 'app_web/review_snippet.html' %}
+            {% endfor %}
+          </div>
+        {% endif %}
+          {% include 'app_web/ticket_snippet.html' with ticket=post.post %}
+      </div>
 
-    <h3>Mes Tickets :</h3>
-    <ul class="ticket">
-        {% for ticket in user_tickets %}
-            <li>
-                <h5>{{ ticket.title }}</h5>
-                <p>{{ ticket.time_created }}</p>
-                {% if ticket.image %}
-                    <img src="{{ ticket.image.url }}" alt="couverture de {{ ticket.title }}" class="cover">
-                {% endif %}
-                <p class="desc">{{ ticket.description }}</p>
-                {% if ticket.review_set.all %}
-                    <p>Une critique existe déjà pour ce ticket.</p>
-                {% else %}
-                    <a href="{% url 'review' ticket.id %}" class="btn-add-review">Ajouter une critique</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <h3>Mes Reviews :</h3>
-    <ul>
-        {% for review in user_reviews %}
-            <li class="ticket">
-                <p>DEBUG: Review Loop</p>
-                <h5> {{ review.ticket.title }} </h5>
-                <p class="time">{{ review.ticket.time_created }}</p>
-                {% if review.ticket.image %}
-                    <img src="{{ review.ticket.image.url }}" alt="couverture de {{ review.ticket.title }}" class="cover">
-                {% endif %}
-                <p class="desc">{{ review.ticket.description }}</p>
-                <h4> {{ review.headline }} </h4>
-                <div class="rating">
-                    <p>Rating: {{ review.rating }} étoiles</p>
-                </div>
-                <p> {{ review.body }} </p>
-                {% if review.user == request.user %}
-                    <form method="post" action="{% url 'review_delete' review.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete_review">Supprimer la critique</button>
-                    </form>
-                    <a href="{% url 'review_update' review.ticket.id %}" class="btn-add-review">Modifier ma critique</a>
-                {% else %}
-                    <p>Vous ne pouvez pas supprimer cette critique</p>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+    {% elif post.post_type == 'REVIEW' %}
+      <div class="review blk">
+      {% include 'app_web/review_snippet.html' with review=post.post %}
+        <div class="in ticket">
+          {% include 'app_web/ticket_snippet.html' with ticket=post.post.ticket %}
+        </div>
+      </div>
+      {% endif %}
+  {% endfor %}
+</div>
 
 {% endblock content %}

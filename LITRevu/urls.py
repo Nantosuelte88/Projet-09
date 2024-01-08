@@ -29,7 +29,6 @@ urlpatterns = [
     path('update_avatar/', authentication.views.update_avatar, name='update_avatar'),
     path('delete_avatar/', authentication.views.delete_avatar, name='delete_avatar'),
     path('home/', app_web.views.home, name='home'),
-    path('flux/', app_web.views.flux, name='flux'),
     path('feed/', app_web.views.feed, name='feed'),
     path('ticket_page/', app_web.views.ticket_demand, name='ticket'),
     path('ticket/<int:ticket_id>/delete/', app_web.views.ticket_delete, name='ticket_delete'),

@@ -10,7 +10,6 @@
         </div>
         <div class="rating">
             <h3>{{ review.headline }}</h3>
-            <p class="star">{{ review.rating }}</p>
             <div>
                 {% for star in post.stars.filled_stars %}
                     <span class="star filled">&#9733;</span>
@@ -28,9 +27,11 @@
             {% if review.user == request.user %}
                 <form method="post" action="{% url 'review_delete' review.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="delete_review">Supprimer la critique</button>
+                    <button type="submit" class="delete btn-add">Supprimer</button>
                 </form>
-                <button onclick="window.location.href='{% url 'review_update' review.ticket.id %}'">Modifier ma critique</button>
+        </div>
+        <div>
+                <button onclick="window.location.href='{% url 'review_update' review.id %}'" class="btn-add">Modifier</button>
             {% endif %}
         </div>
     </div>

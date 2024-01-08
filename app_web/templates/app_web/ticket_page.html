@@ -1,9 +1,47 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Faire une demande de critique</h2>
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" >Publier</button>
-    </form>
+<div class="block-form tkt-page">
+    <h2>Créer un ticket</h2>
+    {% if ticket %}
+        {% if ticket.user == request.user %}
+            <form action="" method="post" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                <p>Titre</p>
+                {{ form.title }}
+                <p>Description</p>
+                {{ form.description }}
+                <p>Image</p>
+                <p>_______________________________________</p>
+                <div class="form-update">
+                  {% if form.instance.image %}
+                    <img src="{{ form.instance.image.url }}" alt="{{ form.instance.image.name }}" class="img-form">
+                    {{ form.image }}
+                  {% else %}
+                    {{ form.image }}
+                  {% endif %}
+                </div>
+                <p>________________________________________</p>
+                <div class="btn-form">
+                    <button type="submit">Modifier</button>
+                </div>
+            </form>
+        {% endif %}
+        {% else %}
+            <form action="" method="post" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                <p>Titre</p>
+                {{ form.title }}
+                <p>Description</p>
+                {{ form.description }}
+                <p>Image</p>
+                {{ form.image }}
+                <div class="btn-form">
+                    <button type="submit">Envoyer</button>
+                </div>
+            </form>
+    {% endif %}
+
+</div>
 {% endblock content %}
+
+

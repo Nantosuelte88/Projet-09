@@ -20,14 +20,16 @@
             {% if ticket.user == request.user %}
                 <form method="post" action="{% url 'ticket_delete' ticket.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="delete">Supprimer la demande de critique</button>
+                    <button type="submit" class="delete btn-add">Supprimer</button>
                 </form>
-                <button onclick="window.location.href='{% url 'ticket_update' ticket.id %}'">Modifier ma demande de critique</button>
+        </div>
+        <div>
+                <button onclick="window.location.href='{% url 'ticket_update' ticket.id %}'" class="btn-add">Modifier</button>
             {% endif %}
         </div>
         <div>
             {% if not ticket.review_set.all %}
-                <button onclick="window.location.href='{% url 'review' ticket.id %}'" class="btn-add">Ajouter une critique</button>
+                <button onclick="window.location.href='{% url 'review' ticket.id %}'" class="btn-add">Créer une critique</button>
             {% endif %}
         </div>
     </div>

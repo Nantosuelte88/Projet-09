@@ -9,25 +9,32 @@
 </head>
 <body>
     <header>
-        <div class="logo">
-            <a href="{% url 'home' %}"><img src="/media/logo.png" alt="Logo de l'application LITRevu"></a>
-        </div>
-        {% if user.is_authenticated %}
-        <nav>
-            <a href="{% url 'feed' %}">Flux</a>
-            <a href="{% url 'posts' %}">Posts</a>
-            <a href="{% url 'subscription' %}">Abonnements</a>
-        </nav>
-                <div class="user-info">
-            {% if user.avatar %}
-                <a href="#avatarOptions"><img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar"></a>
-            {% else %}
-                <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="{{ user.username }} Avatar"></a>
-            {% endif %}
+        <div class="menu">
+            <div class="logo">
+                <a href="{% url 'feed' %}"><img src="/media/logo.png" alt="Logo de l'application LITRevu"></a>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="menu-avatar">
+                    <nav>
+                        <a href="{% url 'feed' %}">Flux</a>
+                        <a href="{% url 'posts' %}">Posts</a>
+                        <a href="{% url 'subscription' %}">Abonnements</a>
+                    </nav>
+                    <div class="user-info">
+                        {% if user.avatar %}
+                            <a href="#avatarOptions"><img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar"></a>
+                        {% else %}
+                            <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="{{ user.username }} Avatar"></a>
+                        {% endif %}
+                    </div>
+                </div>
+
             <!-- Div cachée -->
             <div class="avatar-options" id="avatarOptions">
                 <div class="block-avatar">
-                    <button onclick="window.location.href='#'">Fermer</button>
+                    <div class="close">
+                        <button onclick="window.location.href='#'" class="delete">X</button>
+                    </div>
                     <p>Bonjour {{ user.username }}</p>
                     {% if user.avatar %}
                     <button onclick="window.location.href='{% url 'update_avatar' %}'">Modifier mon avatar</button>
@@ -35,11 +42,11 @@
                     {% else %}
                         <button onclick="window.location.href='{% url 'add_avatar' %}'">Ajouter un avatar</button>
                     {% endif %}
-                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Se déconnecter</button>
+                   <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Se déconnecter</button>
                     </form>
-                    <button onclick="window.location.href='{% url 'password_change' %}'">Modifier son mot de passe</button>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from itertools import chain
 from django.db.models import Q
 from django.db.models import CharField, Value
@@ -28,20 +29,6 @@ def home(request):
         'reviews': reviews,
     }
     return render(request, 'app_web/home.html', context=context)
-
-
-@login_required
-def flux(request):
-    following_users = request.user.following.all()
-
-    tickets_followed = Ticket.objects.filter(user__in=following_users)
-    reviews_followed = Review.objects.filter(user__in=following_users)
-    reviews_in_response = Review.objects.filter(ticket__user=request.user)
-
-    flux_content = list(tickets_followed) + list(reviews_followed) + list(reviews_in_response)
-    flux_content.sort(key=lambda x: x.time_created, reverse=True)
-
-    return render(request, 'app_web/flux.html', {'flux_content': flux_content})
 
 
 @login_required
@@ -96,10 +83,9 @@ def ticket_demand(request):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            print(ticket.image.path)
             ticket.resize_image()
             messages.success(request, 'Ticket créé avec succès!')
-            return redirect('home')
+            return redirect('feed')
         else:
             messages.error(request, 'Erreur lors de la création du ticket '
                                     'Veuillez corriger les erreurs dans le formulaire.')
@@ -111,7 +97,6 @@ def ticket_demand(request):
 
 @login_required
 def ticket_delete(request, ticket_id):
-    print(f"Deleting ticket with ID: {ticket_id}")
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
     if request.user != ticket.user:
@@ -128,44 +113,35 @@ def ticket_delete(request, ticket_id):
 @login_required
 def ticket_update(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
-    print('ticket =', ticket)
 
     if request.user != ticket.user:
-        print('Pas le bon user')
         messages.warning(request, 'Vous n\'êtes pas autorisé à modifier cette critique!')
         return redirect('feed')
     else:
-        print('Bon user')
-        form = TicketPostForm(request.POST, request.FILES, instance=ticket)
+        form = TicketPostForm(request.POST or None, request.FILES or None, instance=ticket)
+
         context = {
             'form': form,
             'ticket': ticket,
         }
 
         if request.method == 'POST':
-            print('C\'est un POST')
             if form.is_valid():
-                print('formulaire valide')
                 new_image = form.cleaned_data.get('image')
                 if new_image:
-                    print('il y a une nouvelle image')
                     if isinstance(new_image, SimpleUploadedFile):
                         if ticket.image:
                             ticket.image.delete(save=False)
                         ticket.image = new_image
-                else:
-                    print('pas de nouvelle image')
 
                 ticket.user = request.user
+                ticket.time_created = timezone.now()
                 form.save()
-                messages.success(request, 'demande de critique modifié avec succès!')
+                messages.success(request, 'Demande de critique modifié avec succès!')
                 return redirect('feed')
             else:
-                print('formulaire non valide')
                 messages.error(request, 'Erreur lors de la modification de la critique. '
                                         'Veuillez corriger les erreurs dans le formulaire.')
-        else:
-            print('pas un POST')
 
     return render(request, 'app_web/ticket_page.html', context=context)
 
@@ -179,7 +155,7 @@ def review_add(request, ticket_id):
 
     if existing_review:
         messages.warning(request, 'Vous avez déjà créé une critique pour ce ticket.')
-        return redirect('home')
+        return redirect('feed')
 
     if request.method == 'POST':
         form = ReviewPostForm(request.POST, request.FILES)
@@ -189,7 +165,7 @@ def review_add(request, ticket_id):
             review.ticket = ticket
             review.save()
             messages.success(request, 'Critique créé avec succès!')
-            return redirect('home')
+            return redirect('feed')
         else:
             messages.error(request, 'Erreur lors de la création de la critique '
                                     'Veuillez corriger les erreurs dans le formulaire.')
@@ -211,29 +187,25 @@ def review_delete(request, review_id):
 
     if request.user != review.user:
         messages.warning(request, 'Vous n\'êtes pas autorisé à supprimer cette critique!')
-        return redirect('flux')
+        return redirect('feed')
 
     if request.method == 'POST':
         review.delete()
         messages.success(request, 'Critique supprimé avec succès!')
 
-    return redirect('flux')
+    return redirect('feed')
 
 
 @login_required
 def review_update(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     ticket = review.ticket
-    print('review = ', review)
-    print('ticket =', ticket)
 
     if request.user != review.user:
-        print('Pas le bon user')
         messages.warning(request, 'Vous n\'êtes pas autorisé à modifier cette critique!')
-        return redirect('flux')
+        return redirect('feed')
     else:
-        print('Bon user')
-        form = ReviewPostForm(request.POST, instance=review)
+        form = ReviewPostForm(request.POST or None, request.FILES or None, instance=review)
         context = {
             'form': form,
             'review': review,
@@ -241,16 +213,14 @@ def review_update(request, review_id):
         }
 
         if request.method == 'POST':
-            print('C\'est un POST')
             if form.is_valid():
-                print('formulaire valide')
                 review.user = request.user
                 review.ticket = ticket
+                review.time_created = timezone.now()
                 form.save()
                 messages.success(request, 'Critique modifié avec succès!')
-                return redirect('flux')
+                return redirect('feed')
             else:
-                print('formulaire non valide')
                 messages.error(request, 'Erreur lors de la modification de la critique. '
                                         'Veuillez corriger les erreurs dans le formulaire.')
 
@@ -276,7 +246,7 @@ def ticket_and_review(request):
             review.save()
 
             messages.success(request, 'TicketCritique créé avec succès!')
-            return redirect('home')
+            return redirect('feed')
         else:
             messages.error(request, 'Erreur lors de la création de la Critique. '
                                     'Veuillez corriger les erreurs dans le formulaire.')
@@ -294,11 +264,27 @@ def posts_view(request):
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
 
-    context = {
-        'user_tickets': user_tickets,
-        'user_reviews': user_reviews,
-    }
-    return render(request, 'app_web/posts.html', context=context)
+    posts = [{'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets] + \
+            [{'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews]
+
+    posts.sort(key=lambda x: x['post'].time_created, reverse=True)
+
+    for post in posts:
+        if post['post_type'] == 'REVIEW':
+            post['stars'] = {
+                'filled_stars': range(post['post'].rating),
+                'empty_stars': range(5 - post['post'].rating)
+            }
+        elif post['post_type'] == 'TICKET':
+            reviews = post['post'].review_set.all()
+            if reviews:
+                average_rating = sum(review.rating for review in reviews) / len(reviews)
+                post['stars'] = {
+                    'filled_stars': range(int(average_rating)),
+                    'empty_stars': range(int(5 - average_rating))
+                }
+
+    return render(request, 'app_web/posts.html', {'posts': posts})
 
 
 @login_required
@@ -312,20 +298,23 @@ def subscription(request):
         user_to_follow = User.objects.filter(username=username_to_follow).first()
 
         if user_to_follow:
-            # Vérifier si l'utilisateur cible est bloqué
-            if BlockedUser.objects.filter(user=request.user, blocked_user=user_to_follow).exists():
-                messages.error(request, f"Vous ne pouvez pas suivre un utilisateur bloqué.")
-            elif BlockedUser.objects.filter(user=user_to_follow, blocked_user=request.user).exists():
-                # Même message d'erreur que quand l'utilisateur n'existe pas, à changer au besoin
-                messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
+            if user_to_follow == request.user:
+                messages.error(request, f"Vous ne pouvez pas vous suivre vous-même ;)")
             else:
-                # Toggle du suivi de l'utilisateur
-                user_follow, created = UserFollows.objects.get_or_create(user=request.user,
-                                                                         followed_user=user_to_follow)
-                if created:
-                    messages.success(request, f"Vous suivez maintenant {user_to_follow.username}.")
+                # Vérifier si l'utilisateur cible est bloqué
+                if BlockedUser.objects.filter(user=request.user, blocked_user=user_to_follow).exists():
+                    messages.error(request, f"Vous ne pouvez pas suivre un utilisateur bloqué.")
+                elif BlockedUser.objects.filter(user=user_to_follow, blocked_user=request.user).exists():
+                    # Même message d'erreur que quand l'utilisateur n'existe pas, à changer au besoin
+                    messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
                 else:
-                    messages.success(request, f"Vous suivez déjà {user_to_follow.username}.")
+                    # Toggle du suivi de l'utilisateur
+                    user_follow, created = UserFollows.objects.get_or_create(user=request.user,
+                                                                             followed_user=user_to_follow)
+                    if created:
+                        messages.success(request, f"Vous suivez maintenant {user_to_follow.username}.")
+                    else:
+                        messages.success(request, f"Vous suivez déjà {user_to_follow.username}.")
         else:
             messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
 
@@ -353,17 +342,9 @@ def block_user(request):
 
         if UserFollows.objects.filter(user=user_to_block, followed_user=request.user).exists():
             UserFollows.objects.filter(user=user_to_block, followed_user=request.user).delete()
-            messages.success(request, f"Il vous suivait {user_to_block.username}.")
-
-        else:
-            messages.success(request, f"Il ne vous suivait pas {user_to_block.username}.")
 
         if UserFollows.objects.filter(user=request.user, followed_user=user_to_block).exists():
             UserFollows.objects.filter(user=request.user, followed_user=user_to_block).delete()
-            messages.success(request, f"Vous ne suivez plus {user_to_block.username}.")
-
-        else:
-            messages.success(request, f"Vous ne suiviez pas {user_to_block.username}.")
 
         BlockedUser.objects.create(user=request.user, blocked_user=user_to_block)
         messages.success(request, f"Vous avez bloqué l'utilisateur {user_to_block.username}.")

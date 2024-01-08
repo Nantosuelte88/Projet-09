@@ -1,18 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Créer une critique</h2>
-    <form method="post" enctype="multipart/form-data">
+<h2>Créer une critique</h2>
+<div class="block-form">
+    <form method="post" enctype="multipart/form-data" class="form">
         {% csrf_token %}
-        {{ ticket_form.as_p }}
-        {{ review_form.as_p }}
-        <button type="submit" >Publier</button>
+        <div>
+            <p>Titre</p>
+            {{ ticket_form.title }}
+            <p>Description</p>
+            {{ ticket_form.description }}
+            <p>Image</p>
+            {{ ticket_form.image }}
+        </div>
+        <div>
+            <p>Titre</p>
+            {{ review_form.headline }}
+            <p>Note</p>
+            <span class="rating">{{ review_form.rating }}</span>
+            <div class="desc">
+                <p class="desc-review">Commentaire</p>
+                {{ review_form.body }}
+            </div>
+        </div>
+        <div class="btn-form">
+            <button type="submit" >Publier</button>
+        </div>
     </form>
-    {% if review_form.errors %}
-        <ul class="errorlist">
-            {% for field, errors in review_form.errors.items %}
-                <li>{{ field }}: {{ errors.0 }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+</div>
+
 
 {% endblock content %}

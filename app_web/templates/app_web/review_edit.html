@@ -1,29 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Détails du Ticket</h2>
-    <p>Titre du Ticket: {{ ticket.title }}</p>
-    {% if ticket.image %}
-        <img src="{{ ticket.image.url }}" alt="couverture de {{ ticket.title }}" class="cover">
-    {% endif %}
-    <p>Description du Ticket: {{ ticket.description }}</p>
+<h2>Créer une critique</h2>
+<div class="block-form-review">
+    <h3>Vous êtes en train de poster en réponse à :</h3>
+    <div class="ticket">
+        {% include 'app_web/ticket_snippet.html' with ticket=ticket %}
+    </div>
+</div>
+<div class="block-form">
     {% if review %}
+        {% if review.user == request.user %}
         <h3>Modifier une critique</h3>
-        <h5>Votre critique actuelle</h5>
-        <p>note : {{ review.rating }}</p>
-        <p>titre de la critique : {{ review.headline }}</p>
-        <p>contenu de la critique : {{ review.body }}</p>
-        <form method="post" action="{% url 'review_update' review.id %}">
+        <form method="post" action="{% url 'review_update' review.id %}" class="form form-review">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Modifier</button>
+            <p>Titre</p>
+            {{ form.headline }}
+            <p>Note</p>
+            <span class="rating">{{ form.rating }}</span>
+            <div class="desc">
+                <p>Commentaire</p>
+                {{ form.body }}
+            </div>
+            <div class="btn-form">
+                <button type="submit">Modifier</button>
+            </div>
         </form>
+        {% endif %}
     {% else %}
-        <h2>Créer une critique</h2>
-        <form method="post" action="{% url 'review' ticket.id %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Publier ma critique</button>
-        </form>
+        <h3>Critique</h3>
+            <form method="post" action="{% url 'review' ticket.id %}" class="form form-review">
+                {% csrf_token %}
+                <p>Titre</p>
+                {{ form.headline }}
+                <p>Note</p>
+                <span class="rating">{{ form.rating }}</span>
+                <div class="desc">
+                    <p class="desc">Commentaire</p>
+                    {{ form.body }}
+                </div>
+                <div class="btn-form">
+                    <button type="submit">Envoyer</button>
+                </div>
+            </form>
     {% endif %}
+    </div>
+
 
 {% endblock %}

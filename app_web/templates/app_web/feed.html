@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
+<title>Feed</title>
 <div class="block">
-    <h2>Feed</h2>
+    {% for message in messages %}
+        <div class="msg">
+            <ul class="messages">
+                <li>
+                    {% if message.tags %}
+                        {{ message }}
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
+
   <div class="buttons-flux">
       <button onclick="window.location.href='{% url 'ticket' %}'">Demander une critique</button>
       <button onclick="window.location.href='{% url 'ticketreview' %}'">Créer une critique</button>
@@ -20,7 +32,7 @@
       </div>
 
     {% elif post.post_type == 'REVIEW' %}
-      <div class="review">
+      <div class="review blk">
       {% include 'app_web/review_snippet.html' with review=post.post %}
         <div class="in ticket">
           {% include 'app_web/ticket_snippet.html' with ticket=post.post.ticket %}

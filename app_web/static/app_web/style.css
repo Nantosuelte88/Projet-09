@@ -1,9 +1,45 @@
-* { background: grey}
+body {
+    background-color: #d1e0e0;
+    margin: 0;
+}
 
 header {
+    background-color: #669999;
+}
+
+
+.menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 1em;
+}
+
+.menu-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    top: 2.8em;
+    right: 2em;
+    font-size: 1.2em;
+}
+
+.menu-avatar a {
+    color: black;
+    text-decoration: none;
+    padding: 0em 0.5em 0em 0.5em;
+}
+
+.menu-avatar nav a:hover {
+    transition: 1s;
+    color: white;
+    background-color: #3d5c5c;
+}
+
+h2 {
+    margin-top: 3em;
+    text-align: center;
 }
 
 .logo {
@@ -38,15 +74,19 @@ nav a {
     height: 40px;
 }
 
+.user-info img:hover {
+    transition: 1s;
+    filter: invert(1);
+}
+
+
 /* Style de la div cachée */
 .avatar-options {
     display: none;
     position: fixed;
     z-index: 1;
     right: 1%;
-    top: 20%;
-    padding: 20px;
-    border: 1px solid #f00;
+    top: 11%;
 }
 
 /* Afficher la div cachée lorsqu'elle est activée */
@@ -55,10 +95,31 @@ nav a {
 }
 
 .block-avatar {
-    background-color: pink;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    margin-left: 0.5em;
+    border: 2px solid black;
+    padding: 1em;
+    margin-top: 1em;
+    background-color: #c2d6d6;
+    border-radius: 5px;
+}
+
+.block-avatar p {
+    text-align: center;
+}
+
+.block-avatar button {
+    width: 100%;
+}
+
+.close {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close button {
+    max-width: 15%;
 }
 
 .avatar {
@@ -72,20 +133,47 @@ li {
 }
 
 button {
+    border: none;
     border-radius: 5px;
     padding: 0.5em;
     margin: 5px 0 5px 0;
+    cursor: pointer;
+    transition: background-color 1s;
+    background-color: #94b8b8;
 }
 
 .btn-snippet {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    margin: 3em 0 1em 0;
+    margin: 5em 0 1em 0;
+}
+
+.btn-snippet button {
+    padding: 1em;
 }
 
 .btn-add {
-    padding: 1em;
+    adding: 1em;
+    font-size: 1em;
+    min-width: 12em;
+}
+
+.delete{
+    color: #cc0000;
+    border-color: #cc0000;
+}
+
+.delete:hover {
+    background-color: #cc0000;
+    transition: 1s;
+    color: white;
+}
+
+.msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .title-block {
@@ -103,11 +191,18 @@ button {
     margin-top: 2em;
 }
 
+.desc input {
+    min-height: 10em;
+    margin-bottom: 3em;
+}
 
 .block {
-    display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.blk {
+    margin: 0em 17em;
 }
 
 .login_page {
@@ -133,24 +228,28 @@ button {
 .buttons-flux {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     padding: 2em;
+    margin-top: 6em;
 }
 
 .buttons-flux button{
+    font-size: 1em;
     padding: 1em 4em 1em 4em;
     margin: 0 5em 0px 5em;
 }
 
-.ticket, .review {
+.ticket {
+    margin: 5em 17em 5em 17em;
+}
+
+.ticket, .review, .form {
     border: 2px solid black;
-    margin: 5px;
-    width: 50%;
+    width: auto;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     padding: 3em;
-    margin: 2em;
 }
 
 .ticket img, .review img {
@@ -158,12 +257,78 @@ button {
     height: auto;
 }
 
+.block-form {
+    margin: 0em 14em 2em 14em;
 
-.rating {
+    border: 2px solid black;
+}
+
+.tkt-page{
+    border: none;
+}
+
+.block-form h3{
+    margin-left: 1em;
+}
+
+.form {
+    width: auto;
+    padding: 4em 7em 4em 7em;
+}
+
+.img-form{
+    max-width: 25em;
+    height: auto;
+}
+
+.form-review {
+    margin: 2em 7em 2em 7em;
+
+}
+
+.form input, .form textarea {
+    width: 100%;
+}
+
+.form p {
+    margin: 3em 0em 1em 0em;
+}
+
+.form-update a, .form-update #text{
+    display: none;
+}
+
+.form-update label{
+    font-size: 1.2em;
+}
+
+.form-update checkbox {
+    width: 5%;
+    min-height: 2em;
+}
+
+.btn-form{
+    text-align: end;
+}
+
+.btn-form button {
+    padding: 1em 4em 1em 4em;
+}
+
+button:hover {
+    transition: 1s;
+    color: white;
+    background-color: #527a7a;
+    border-color: #527a7a;
+}
+
+.rating-radio {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    padding-right: 41em;
 }
+
 .star {
     margin-left: 3em;
     font-size: 24px;
@@ -174,8 +339,79 @@ button {
     color: black;
 }
 
+.desc-review input {
+    min-height: 10em;
+    margin-bottom: 3em;
+}
+
+.block-form-review {
+    margin: 0em 14em 2em 14em;
+    border: 2px solid black;
+}
 
 .in {
     width: auto;
     border: 2px solid black;
+    padding: 2em;
+}
+
+.in h4 {
+    margin: 2em;
+    color: red;
+}
+
+.subs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    padding: 3em 7em 3em 7em;
+}
+
+.subs ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.subs li {
+    display: flex;
+    min-width: 80em;
+    border: 1px solid black;
+    margin: 0.5em 0em;
+    padding: 0;
+    align-items: center
+}
+
+.messages li {
+    padding: 1em;
+    background-color: pink;
+}
+
+.form-uf {
+    display: flex;
+}
+
+.username {
+    min-width: 70em;
+    padding-left: 2em;
+}
+
+.form-uf button {
+    margin: 0;
+    min-height: 100%;
+    padding: 1.5em 2em;
+    border: none;
+    border-radius: 0;
+    border-left: 1px solid black;
+}
+
+.new-sub input {
+    margin-top: 1em;
+    min-width: 80em;
+    min-height: 2em;
+}
+
+.followers li {
+    min-width: 86em;
 }
