@@ -190,6 +190,8 @@ button {
 
 .desc {
     margin-top: 2em;
+    margin-bottom: 3em;
+    font-size: 1.1em;
 }
 
 .desc input {
@@ -249,7 +251,7 @@ button {
 }
 
 .ticket {
-    margin: 5em 17em 5em 17em;
+    margin: 5em 14em 5em 14em;
 }
 
 .ticket, .review, .form {

@@ -42,16 +42,22 @@ def feed(request):
     # Avis des utilisateurs suivis
     reviews_followed = Review.objects.filter(user__in=following_users)
 
-    # Avis en réponse aux billets de l'utilisateur connecté
-    reviews_in_response = Review.objects.filter(ticket__user=request.user)
-
     # Billets et avis de l'utilisateur connecté
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
 
+    # Avis en réponse aux billets de l'utilisateur connecté
+    reviews_in_response = Review.objects.filter(ticket__user=request.user)
+
+    # Liste temporaire pour stocker les ID des reviews déjà ajoutées
+    added_reviews_ids = []
+
+    added_reviews_ids += [review.id for review in reviews_followed]
+
     posts = [{'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed] + \
             [{'post': review, 'post_type': 'REVIEW'} for review in reviews_followed] + \
-            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response] + \
+            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response if
+             review.id not in added_reviews_ids] + \
             [{'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets] + \
             [{'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews]
 
@@ -63,6 +69,7 @@ def feed(request):
                 'filled_stars': range(post['post'].rating),
                 'empty_stars': range(5 - post['post'].rating)
             }
+
         elif post['post_type'] == 'TICKET':
             reviews = post['post'].review_set.all()
             if reviews:
@@ -347,6 +354,17 @@ def block_user(request):
             UserFollows.objects.filter(user=request.user, followed_user=user_to_block).delete()
 
         BlockedUser.objects.create(user=request.user, blocked_user=user_to_block)
+
+        # Supprimer les reviews de l'utilisateur bloqué en réponse aux tickets de l'utilisateur bloquant
+        user_reviews_to_delete = Review.objects.filter(user=user_to_block, ticket__user=request.user)
+        user_reviews_to_delete.delete()
+
+        # Supprimer les reviews de l'utilisateur bloquant en réponse aux tickets de l'utilisateur bloqué
+        blocked_user_tickets = Ticket.objects.filter(user=user_to_block)
+        blocked_user_reviews_to_delete = Review.objects.filter(ticket__user=request.user,
+                                                               ticket__in=blocked_user_tickets)
+        blocked_user_reviews_to_delete.delete()
+
         messages.success(request, f"Vous avez bloqué l'utilisateur {user_to_block.username}.")
 
     return redirect('subscription')
