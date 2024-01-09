@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Inscription</h2>
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
-    <form method="post" enctype="multipart/form-data">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >S’inscrire</button>
-        <button onclick="window.location.href='{% url 'login' %}'">Retour</button>
-    </form>
+    <div class="block">
+        {% if form.errors %}
+            {{ form.errors }}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <button type="submit" >S’inscrire</button>
+            <button onclick="window.location.href='{% url 'login' %}'">Retour</button>
+        </form>
+    </div>
+
 {% endblock content %}

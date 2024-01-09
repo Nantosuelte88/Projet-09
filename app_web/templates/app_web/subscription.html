@@ -6,7 +6,6 @@
         <h2>Suivre d'autres utilisateurs</h2>
         {% if messages %}
                 <div>
-                    <p>message ?</p>
                     <ul class="messages">
                         {% for message in messages %}
                             <li>
@@ -22,7 +21,7 @@
             {% csrf_token %}
             <label for="id_username_to_follow">Nom d'utilisateur :</label>
             <input type="text" name="username_to_follow" id="id_username_to_follow" required>
-            <button type="submit">Suivre</button>
+            <button type="submit">Suivre l'utilisateur</button>
         </form>
     </div>
     <div>
@@ -38,12 +37,12 @@
                             <form method="post" action="{% url 'unfollow' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="user_to_unfollow" value="{{ user.id }}">
-                                <button type="submit">Désabonner</button>
+                                <button type="submit">Se désabonner</button>
                             </form>
                             <form method="post" action="{% url 'block_user' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="user_to_block" value="{{ user.id }}">
-                                <button type="submit">Bloquer</button>
+                                <button type="submit" class="delete">Bloquer</button>
                             </form>
                         </div>
                     </li>
@@ -66,7 +65,7 @@
                             <form method="post" action="{% url 'block_user' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="user_to_block" value="{{ user.id }}">
-                                <button type="submit">Bloquer</button>
+                                <button type="submit" class="delete">Bloquer</button>
                             </form>
                         </div>
                     </li>

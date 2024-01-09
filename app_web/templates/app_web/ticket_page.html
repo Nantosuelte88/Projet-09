@@ -11,7 +11,6 @@
                 <p>Description</p>
                 {{ form.description }}
                 <p>Image</p>
-                <p>_______________________________________</p>
                 <div class="form-update">
                   {% if form.instance.image %}
                     <img src="{{ form.instance.image.url }}" alt="{{ form.instance.image.name }}" class="img-form">
@@ -20,7 +19,6 @@
                     {{ form.image }}
                   {% endif %}
                 </div>
-                <p>________________________________________</p>
                 <div class="btn-form">
                     <button type="submit">Modifier</button>
                 </div>

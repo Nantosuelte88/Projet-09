@@ -110,4 +110,4 @@ def delete_avatar(request):
         # Loggez l'erreur ou imprimez-la pour le débogage
         print(f"Erreur lors de la suppression de l'avatar : {e}")
 
-    return redirect('home')
+    return redirect('feed')

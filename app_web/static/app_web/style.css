@@ -160,8 +160,9 @@ button {
 }
 
 .delete{
-    color: #cc0000;
-    border-color: #cc0000;
+    font-weight: bold;
+ /*   color: #cc0000;
+    border-color: #cc0000; */
 }
 
 .delete:hover {
@@ -216,6 +217,14 @@ button {
     display: flex;
     flex-direction: column;
     text-align: center;
+}
+
+.login_page p{
+    font-size: 1.4em;
+}
+
+.login_page form label {
+    font-size: 0.7em;
 }
 
 .flux{
@@ -294,17 +303,47 @@ button {
     margin: 3em 0em 1em 0em;
 }
 
-.form-update a, .form-update #text{
+.form-update {
+    color: #d1e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-update a {
+    display: none;
+}
+
+#id_image {
+    color: black;
+}
+
+#id_image input {
+    background-color: pink;
+}
+
+
+.form-update text {
+    display: none;
+}
+
+.form-update #text {
+    display: none;
+}
+
+#text {
     display: none;
 }
 
 .form-update label{
-    font-size: 1.2em;
+    margin-top: -1em;
+    color: black;
+    margin-bottom: 1em;
+    font-size: 1em;
 }
 
-.form-update checkbox {
-    width: 5%;
-    min-height: 2em;
+.form-update #image-clear_id{
+    width: 15%;
+    min-height: 1.3em;
 }
 
 .btn-form{
@@ -385,7 +424,6 @@ button:hover {
 
 .messages li {
     padding: 1em;
-    background-color: pink;
 }
 
 .form-uf {
@@ -414,4 +452,5 @@ button:hover {
 
 .followers li {
     min-width: 86em;
+    justify-content: space-between;
 }
