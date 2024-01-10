@@ -5,7 +5,7 @@
         {% if form.errors %}
             {{ form.errors }}
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="form">
             {{ form.as_p }}
             {% csrf_token %}
             <button type="submit" >S’inscrire</button>

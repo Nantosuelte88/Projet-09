@@ -12,12 +12,13 @@
             <h3>{{ review.headline }}</h3>
             <div>
                 {% for star in post.stars.filled_stars %}
-                    <span class="star filled">&#9733;</span>
+                    <span class="star filled" aria-hidden="true">&#9733;</span>
                 {% endfor %}
                 {% for star in post.stars.empty_stars %}
-                    <span class="star">&#x2606;</span>
+                    <span class="star" aria-hidden="true">&#x2606;</span>
                 {% endfor %}
             </div>
+                <span aria-label="Note {{ review.rating }} sur 5" class="visually-hidden">{{ review.rating }}/5</span>
         </div>
 
     </div>
@@ -27,11 +28,13 @@
             {% if review.user == request.user %}
                 <form method="post" action="{% url 'review_delete' review.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="delete btn-add">Supprimer</button>
+                    <button type="submit" class="delete btn-add"
+                            aria-label="Supprimer votre review">Supprimer</button>
                 </form>
         </div>
         <div>
-                <button onclick="window.location.href='{% url 'review_update' review.id %}'" class="btn-add">Modifier</button>
+                <button onclick="window.location.href='{% url 'review_update' review.id %}'"
+                        aria-label="Modifier votre review" class="btn-add">Modifier</button>
             {% endif %}
         </div>
     </div>

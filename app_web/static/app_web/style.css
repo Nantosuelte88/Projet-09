@@ -153,6 +153,11 @@ button {
     padding: 1em;
 }
 
+.rating {
+    display: flex;
+    align-items: center;
+}
+
 .btn-add {
     adding: 1em;
     font-size: 1em;
@@ -161,8 +166,6 @@ button {
 
 .delete{
     font-weight: bold;
- /*   color: #cc0000;
-    border-color: #cc0000; */
 }
 
 .delete:hover {
@@ -274,11 +277,17 @@ button {
     border: 2px solid black;
 }
 
+.block-form img{
+    margin-top: 1em;
+    max-width: 25em;
+    height: auto;
+}
+
 .tkt-page{
     border: none;
 }
 
-.block-form h3{
+.block-form h3, .block-form-review h3{
     margin-left: 1em;
 }
 
@@ -299,48 +308,25 @@ button {
 
 .form input, .form textarea {
     width: 100%;
+    margin-top: 1em;
 }
 
 .form p {
     margin: 3em 0em 1em 0em;
 }
 
-.form-update {
-    color: #d1e0e0;
-    display: flex;
-    flex-direction: column;
+.form label {
+    margin: 3em 0em 1em 0em;
+    font-size: 1.1em;
 }
 
-.form-update a {
-    display: none;
+.img-delete {
+
 }
 
-#id_image {
-    color: black;
-}
-
-#id_image input {
-    background-color: pink;
-}
-
-
-.form-update text {
-    display: none;
-}
-
-.form-update #text {
-    display: none;
-}
-
-#text {
-    display: none;
-}
-
-.form-update label{
-    margin-top: -1em;
-    color: black;
-    margin-bottom: 1em;
-    font-size: 1em;
+.img-delete #id_image-clear_id{
+    width: 5%;
+    min-height: 1.3em;
 }
 
 .form-update #image-clear_id{
@@ -455,4 +441,15 @@ button:hover {
 .followers li {
     min-width: 86em;
     justify-content: space-between;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }

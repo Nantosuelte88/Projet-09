@@ -1,42 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="block-form tkt-page">
-    <h2>Créer un ticket</h2>
     {% if ticket %}
+    <h2>Modifier votre ticket</h2>
         {% if ticket.user == request.user %}
             <form action="" method="post" enctype="multipart/form-data" class="form">
                 {% csrf_token %}
-                <p>Titre</p>
-                {{ form.title }}
-                <p>Description</p>
-                {{ form.description }}
-                <p>Image</p>
-                <div class="form-update">
-                  {% if form.instance.image %}
-                    <img src="{{ form.instance.image.url }}" alt="{{ form.instance.image.name }}" class="img-form">
-                    {{ form.image }}
-                  {% else %}
-                    {{ form.image }}
-                  {% endif %}
-                </div>
+                {{ form.as_p }}
                 <div class="btn-form">
                     <button type="submit">Modifier</button>
                 </div>
             </form>
         {% endif %}
-        {% else %}
-            <form action="" method="post" enctype="multipart/form-data" class="form">
-                {% csrf_token %}
-                <p>Titre</p>
-                {{ form.title }}
-                <p>Description</p>
-                {{ form.description }}
-                <p>Image</p>
-                {{ form.image }}
-                <div class="btn-form">
-                    <button type="submit">Envoyer</button>
-                </div>
-            </form>
+    {% else %}
+    <h2>Créer un ticket</h2>
+        <form action="" method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="btn-form">
+                <button type="submit">Envoyer</button>
+            </div>
+        </form>
     {% endif %}
 
 </div>

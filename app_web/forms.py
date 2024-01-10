@@ -8,31 +8,58 @@ from django.utils.html import format_html
 from . import models
 
 
-class CustomImagePreviewWidget(ClearableFileInput):
-    template_name = 'app_web/widgets/custom_image_preview_widget.html'
-
+class CustomImageWidget(ClearableFileInput):
     def render(self, name, value, attrs=None, renderer=None):
-        html = super().render(name, value, attrs, renderer)
-        if value and hasattr(value, "url"):
-            return format_html(
-                '<img src="{}" alt="{}" class="img-form">{}</label>',
-                value.url, value.name, html
-            )
-        return html
+        template = (
+            '<br>'
+            '<img src="%(image_url)s" alt="image actuelle de votre ticket"><br><br>'
+            '<span class="img-delete">'
+            '<label for="%(id)s-clear_id">Effacer</label>'
+            '<input type="checkbox" name="%(name)s-clear" id="%(id)s-clear_id">'
+            '</span><br><br>'
+            '<label for="%(id)s">Modification</label><br>'
+            '<input type="%(type)s" name="%(name)s" accept="%(accept)s" id="%(id)s">'
+        )
+
+        return mark_safe(template % {
+            'id': attrs['id'],
+            'name': name,
+            'current_value': f'<a href="{value.url}">{value.name}</a>' if value else 'Aucune',
+            'type': self.input_type,
+            'accept': self.attrs.get('accept', 'image/*'),
+            'image_url': value.url if value else '',
+        })
 
 
 class TicketPostForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        instance = kwargs.get('instance')
+        if instance and instance.image:
+            # Modification avec une image existante
+            self.fields['image'].widget = CustomImageWidget()
+
     class Meta:
         model = Ticket
         fields = ['title', 'description', 'image']
+        labels = {
+            'title': 'Titre',
+        }
+
+    image = forms.ImageField(widget=forms.ClearableFileInput())
 
 
 class ReviewPostForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['rating', 'headline', 'body']
+        fields = ['headline', 'rating', 'body']
         widgets = {
             'rating': forms.RadioSelect(attrs={'class': 'rating-radio'}),
+        }
+        labels = {
+            'headline': 'Titre',
+            'rating': 'Note',
+            'body': 'Commentaire',
         }
 
     RATING_CHOICES = [
@@ -52,5 +79,3 @@ class ReviewPostForm(forms.ModelForm):
         return cleaned_data
 
 
-class RadioSelectWithInlineLabel(forms.RadioSelect):
-    template_name = 'app_web/widgets/radio_select_inline_label.html'

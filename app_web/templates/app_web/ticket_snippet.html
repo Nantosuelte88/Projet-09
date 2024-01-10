@@ -13,18 +13,20 @@
     </div>
     <p class="desc">{{ ticket.description }}</p>
     {% if ticket.image %}
-        <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+        <img src="{{ ticket.image.url }}" alt="Image de couverture de {{ ticket.title }}">
     {% endif %}
     <div class="btn-snippet">
         <div>
             {% if ticket.user == request.user %}
                 <form method="post" action="{% url 'ticket_delete' ticket.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="delete btn-add">Supprimer</button>
+                    <button type="submit" class="delete btn-add"
+                            aria-label="Supprimer votre ticket">Supprimer</button>
                 </form>
         </div>
         <div>
-                <button onclick="window.location.href='{% url 'ticket_update' ticket.id %}'" class="btn-add">Modifier</button>
+                <button onclick="window.location.href='{% url 'ticket_update' ticket.id %}'"
+                        aria-label="Modifier votre ticket" class="btn-add">Modifier</button>
             {% endif %}
         </div>
         <div>

@@ -11,20 +11,26 @@
     <header>
         <div class="menu">
             <div class="logo">
-                <a href="{% url 'feed' %}"><img src="/media/logo.png" alt="Logo de l'application LITRevu"></a>
+                <a href="{% url 'feed' %}">
+                    <img src="/media/logo.png" alt="Logo de l'application LITRevu" title="lien vers la page de votre flux">
+                </a>
             </div>
             {% if user.is_authenticated %}
                 <div class="menu-avatar">
                     <nav>
-                        <a href="{% url 'feed' %}">Flux</a>
-                        <a href="{% url 'posts' %}">Posts</a>
-                        <a href="{% url 'subscription' %}">Abonnements</a>
+                        <a href="{% url 'feed' %}" aria-label="Accéder à votre flux d'activité">Flux</a>
+                        <a href="{% url 'posts' %}" aria-label="Accéder à la liste de vos posts">Posts</a>
+                        <a href="{% url 'subscription' %}" aria-label="Accéder à la gestion des abonnements">Abonnements</a>
                     </nav>
                     <div class="user-info">
                         {% if user.avatar %}
-                            <a href="#avatarOptions"><img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar"></a>
+                            <a href="#avatarOptions" aria-label="Ouvre une fenêtre modale">
+                                <img src="{{ user.avatar.url }}" alt="{{ user.username }} Avatar" title="lien vers plus de fonctionnalités">
+                            </a>
                         {% else %}
-                            <a href="#avatarOptions"><img src="/media/avatarbase.jpg" alt="{{ user.username }} Avatar"></a>
+                            <a href="#avatarOptions" aria-label="Ouvre une fenêtre modale">
+                                <img src="/media/avatarbase.jpg" alt="{{ user.username }} Avatar" title="lien vers plus de fonctionnalités">
+                            </a>
                         {% endif %}
                     </div>
                 </div>
@@ -33,7 +39,7 @@
             <div class="avatar-options" id="avatarOptions">
                 <div class="block-avatar">
                     <div class="close">
-                        <button onclick="window.location.href='#'" class="delete">X</button>
+                        <button onclick="window.location.href='#'" class="delete" aria-label="Fermer">X</button>
                     </div>
                     <p>Bonjour {{ user.username }}</p>
                     {% if user.avatar %}

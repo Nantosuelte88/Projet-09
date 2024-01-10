@@ -13,14 +13,7 @@
         <h3>Modifier une critique</h3>
         <form method="post" action="{% url 'review_update' review.id %}" class="form form-review">
             {% csrf_token %}
-            <p>Titre</p>
-            {{ form.headline }}
-            <p>Note</p>
-            <span class="rating">{{ form.rating }}</span>
-            <div class="desc">
-                <p>Commentaire</p>
-                {{ form.body }}
-            </div>
+            {{ form.as_p }}
             <div class="btn-form">
                 <button type="submit">Modifier</button>
             </div>
@@ -30,14 +23,7 @@
         <h3>Critique</h3>
             <form method="post" action="{% url 'review' ticket.id %}" class="form form-review">
                 {% csrf_token %}
-                <p>Titre</p>
-                {{ form.headline }}
-                <p>Note</p>
-                <span class="rating">{{ form.rating }}</span>
-                <div class="desc">
-                    <p class="desc">Commentaire</p>
-                    {{ form.body }}
-                </div>
+                {{ form.as_p }}
                 <div class="btn-form">
                     <button type="submit">Envoyer</button>
                 </div>
