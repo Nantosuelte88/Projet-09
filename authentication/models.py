@@ -5,7 +5,7 @@ from PIL import Image
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField('self', through=UserFollows, related_name='followers')
+    following = models.ManyToManyField('self', through=UserFollows)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     IMAGE_MAX_SIZE = (800, 800)

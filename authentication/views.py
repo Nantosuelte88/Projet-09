@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.contrib.auth.views import LoginView
 
 from app_web.utils import resize_image
 from .forms import AvatarUploadForm

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="block-up">
   <h2>Modifier mon avatar</h2>
   {% if messages %}
       {% for message in messages %}
@@ -12,4 +13,6 @@
     {{ form.as_p }}
     <button type="submit">Modifier l'avatar</button>
   </form>
+</div>
+
 {% endblock %}

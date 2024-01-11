@@ -14,7 +14,6 @@ urlpatterns = [
         template_name='authentication/login.html',
         redirect_authenticated_user=True
     ), name='login'),
-    #path('logout/', authentication.views.logout_user, name='logout'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('change-password/', PasswordChangeView.as_view(
         template_name='authentication/password_change_form.html'),

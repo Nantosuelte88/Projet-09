@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Inscription</h2>
-    <div class="block">
+    <div class="block signup">
         {% if form.errors %}
             {{ form.errors }}
         {% endif %}
         <form method="post" enctype="multipart/form-data" class="form">
             {{ form.as_p }}
             {% csrf_token %}
-            <button type="submit" >S’inscrire</button>
-            <button onclick="window.location.href='{% url 'login' %}'">Retour</button>
+            <div class="btn-signup">
+                <button onclick="window.location.href='{% url 'login' %}'"
+                        aria-label="retour à la page de connexion">Retour</button>
+                <button type="submit">S’inscrire</button>
+            </div>
         </form>
     </div>
-
 {% endblock content %}

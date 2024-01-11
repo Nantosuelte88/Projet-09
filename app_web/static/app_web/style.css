@@ -7,6 +7,11 @@ header {
     background-color: #669999;
 }
 
+.login-page button {
+    padding: 1em;
+    font-size: 1em;
+    min-width: 12em;
+}
 
 .menu {
     display: flex;
@@ -113,6 +118,32 @@ nav a {
     width: 100%;
 }
 
+.add-avatar{
+    margin: 6em 30em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.block-up {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5em;
+    border: 2px solid black;
+    padding: 1em;
+    margin: 4em 12em;
+    background-color: #c2d6d6;
+    border-radius: 5px;
+    font-size: 1.1em;
+}
+
+.btn-add-avatar {
+    padding: 1em;
+    font-size: 1em;
+    width: auto;
+}
+
 .close {
     display: flex;
     justify-content: flex-end;
@@ -159,7 +190,7 @@ button {
 }
 
 .btn-add {
-    adding: 1em;
+    padding: 1em;
     font-size: 1em;
     min-width: 12em;
 }
@@ -214,7 +245,7 @@ button {
 .login_page {
     display: flex;
     justify-content: space-evenly;
-    align-items: baseline;
+    align-items: center;
     margin: 15%
 }
 
@@ -222,6 +253,7 @@ button {
     display: flex;
     flex-direction: column;
     text-align: center;
+    align-items: center;
 }
 
 .login_page p{
@@ -229,7 +261,54 @@ button {
 }
 
 .login_page form label {
-    font-size: 0.7em;
+    font-size: 0.9em;
+}
+
+.form-login input {
+    min-width: 24em;
+}
+
+.login_page  button {
+    padding: 1em 3em;
+    font-size: 1em;
+}
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.signup {
+    margin: 2em 12em;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-signup {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-signup  button {
+    margin: 0.5em;
+    padding: 1em 4em;
+}
+
+.signup form {
+    border: none;
+    width: 40%;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 .flux{
