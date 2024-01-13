@@ -6,6 +6,16 @@ from PIL import Image
 
 
 class Ticket(models.Model):
+    """
+    Modèle représentant un ticket dans l'application.
+
+    Attributes:
+        - title (CharField): Le titre du ticket.
+        - description (TextField): La description détaillée du ticket.
+        - user (ForeignKey): L'utilisateur associé à ce ticket.
+        - image (ImageField): L'image attachée au ticket.
+        - time_created (DateTimeField) : La date et l'heure de création du ticket.
+    """
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=2048, blank=True)
 
@@ -17,6 +27,11 @@ class Ticket(models.Model):
     IMAGE_MAX_SIZE = (800, 800)
 
     def resize_image(self):
+        """
+        Redimensionne l'image attachée au ticket à la taille maximale spécifiée.
+
+        Utilise la bibliothèque PIL pour redimensionner l'image.
+        """
         image = Image.open(self.image)
         image.thumbnail(self.IMAGE_MAX_SIZE)
         image.save(self.image.path)
@@ -26,9 +41,19 @@ class Ticket(models.Model):
 
 
 class Review(models.Model):
+    """
+    Modèle représentant une critique associée à un ticket.
+
+    Attributes:
+    - ticket (ForeignKey): Le ticket associé à la critique.
+    - rating (PositiveSmallIntegerField) : La note de la critique (entre 0 et 5).
+    - headline (CharField) : Le titre de la critique.
+    - body (TextField): Le contenu détaillé de la critique.
+    - user (ForeignKey): L'utilisateur qui a écrit la critique.
+    - time_created (DateTimeField) : La date et l'heure de création de la critique.
+    """
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
-        # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
     headline = models.CharField(max_length=128)
     # modification de body, pour passer de CharField à TextField
@@ -39,6 +64,15 @@ class Review(models.Model):
 
 
 class BlockedUser(models.Model):
+    """
+    Modèle représentant un utilisateur bloqué par un autre utilisateur.
+
+    Attributes:
+    - user (ForeignKey) : L'utilisateur qui effectue le blocage.
+    - blocked_user (ForeignKey) : L'utilisateur qui est bloqué.
+    - can_access_tickets (BooleanField) : Indique si l'utilisateur bloqué peut accéder aux tickets.
+    - can_access_reviews (BooleanField) : Indique si l'utilisateur bloqué peut accéder aux critiques.
+    """
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -59,6 +93,17 @@ class BlockedUser(models.Model):
 
 
 class UserFollows(models.Model):
+    """
+    Modèle représentant un suivi d'utilisateur.
+
+    Attributes:
+    - user (ForeignKey): L'utilisateur qui effectue le suivi.
+    - followed_user (ForeignKey) : L'utilisateur suivi.
+
+    Meta:
+    - unique_together (tuple) : Assure qu'il n'y a qu'une seule instance de ce modèle
+      pour chaque paire unique d'utilisateur et d'utilisateur suivi.
+    """
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -71,6 +116,4 @@ class UserFollows(models.Model):
     )
 
     class Meta:
-        # ensures we don't get multiple UserFollows instances
-        # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user', )

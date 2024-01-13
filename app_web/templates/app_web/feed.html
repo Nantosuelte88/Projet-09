@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
+{% block title %}Votre feed - LITRevu{% endblock title %}
 {% block content %}
-<title>Feed</title>
 <h2>Votre feed</h2>
 <div class="block">
     {% for message in messages %}
@@ -35,7 +35,5 @@
       {% endif %}
   {% endfor %}
 </div>
-
-
 
 {% endblock content %}

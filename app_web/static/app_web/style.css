@@ -81,7 +81,8 @@ nav a {
 
 .user-info img:hover {
     transition: 1s;
-    filter: invert(1);
+    /* filter: invert(1); */
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 
@@ -91,7 +92,7 @@ nav a {
     position: fixed;
     z-index: 1;
     right: 1%;
-    top: 11%;
+    top: 9%;
 }
 
 /* Afficher la div cachée lorsqu'elle est activée */
@@ -184,11 +185,6 @@ button {
     padding: 1em;
 }
 
-.rating {
-    display: flex;
-    align-items: center;
-}
-
 .btn-add {
     padding: 1em;
     font-size: 1em;
@@ -239,7 +235,7 @@ button {
 }
 
 .blk {
-    margin: 0em 17em;
+    margin: 3em 14em;
 }
 
 .login_page {
@@ -399,10 +395,6 @@ button {
     font-size: 1.1em;
 }
 
-.img-delete {
-
-}
-
 .img-delete #id_image-clear_id{
     width: 5%;
     min-height: 1.3em;
@@ -428,11 +420,25 @@ button:hover {
     border-color: #527a7a;
 }
 
+.rating {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .rating-radio {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-right: 41em;
+}
+
+.rating-radio label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 3.5em;
+    justify-content: space-between;
 }
 
 .star {
@@ -520,6 +526,35 @@ button:hover {
 .followers li {
     min-width: 86em;
     justify-content: space-between;
+}
+
+.ticket-form-edit {
+    padding-bottom: 3em;
+    margin-bottom: 3em;
+    border-bottom: 2px solid black;
+}
+
+.form-tck-rvw {
+    width: auto;
+    padding: 4em 7em 4em 7em;
+}
+
+.form-tck-rvw h3 {
+    margin-left: 0;
+}
+
+.form-tck-rvw input, .form-tck-rvw textarea {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.form-tck-rvw p {
+    margin: 3em 0em 1em 0em;
+}
+
+.form-tck-rvw label {
+    margin: 3em 0em 1em 0em;
+    font-size: 1.1em;
 }
 
 .visually-hidden {

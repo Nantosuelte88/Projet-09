@@ -1,29 +1,20 @@
 {% extends 'base.html' %}
+{% block title %}Creation d'un ticket et de sa critique - LITRevu{% endblock title %}
 {% block content %}
 <h2>Créer une critique</h2>
 <div class="block-form">
-    <form method="post" enctype="multipart/form-data" class="form">
+    <form method="post" enctype="multipart/form-data" class="form-tck-rvw">
         {% csrf_token %}
-        <div>
-            <p>Titre</p>
-            {{ ticket_form.title }}
-            <p>Description</p>
-            {{ ticket_form.description }}
-            <p>Image</p>
-            {{ ticket_form.image }}
+        <div class="ticket-form-edit">
+        <h3>Livre / Article</h3>
+            {{ ticket_form.as_p }}
         </div>
         <div>
-            <p>Titre</p>
-            {{ review_form.headline }}
-            <p>Note</p>
-            <span class="rating">{{ review_form.rating }}</span>
-            <div class="desc">
-                <p class="desc-review">Commentaire</p>
-                {{ review_form.body }}
-            </div>
+        <h3>Critique </h3>
+            {{ review_form.as_p }}
         </div>
         <div class="btn-form">
-            <button type="submit" >Publier</button>
+            <button type="submit" aria-label="Publier le ticket et la critique">Publier</button>
         </div>
     </form>
 </div>

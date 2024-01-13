@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Creation d'une critique - LITRevu{% endblock title %}
 {% block content %}
 <h2>Créer une critique</h2>
 <div class="block-form-review">
@@ -15,7 +16,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <div class="btn-form">
-                <button type="submit">Modifier</button>
+                <button type="submit" aria-label="Modifier la critique">Modifier</button>
             </div>
         </form>
         {% endif %}
@@ -25,7 +26,7 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="btn-form">
-                    <button type="submit">Envoyer</button>
+                    <button type="submit" aria-label="Publier la critique">Envoyer</button>
                 </div>
             </form>
     {% endif %}

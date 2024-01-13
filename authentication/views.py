@@ -1,9 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
-from django.contrib.auth.views import LoginView
 
 from app_web.utils import resize_image
 from .forms import AvatarUploadForm
@@ -14,6 +13,9 @@ from . import forms
 
 
 def signup_page(request):
+    """
+    Affiche la page d'inscription et gère le processus d'inscription.
+    """
     form = forms.SignupForm()
     if request.method == 'POST':
         form = forms.SignupForm(request.POST, request.FILES)
@@ -37,6 +39,9 @@ def signup_page(request):
 
 @login_required
 def add_avatar(request):
+    """
+    Gère l'ajout d'un avatar à un utilisateur existant.
+    """
     if request.method == 'POST':
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
 
@@ -69,6 +74,9 @@ def add_avatar(request):
 
 @login_required
 def update_avatar(request):
+    """
+    Gère la mise à jour de l'avatar d'un utilisateur existant.
+    """
     if request.method == 'POST':
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
 
@@ -100,6 +108,9 @@ def update_avatar(request):
 
 @login_required
 def delete_avatar(request):
+    """
+    Gère la suppression de l'avatar d'un utilisateur via un formulaire (bouton).
+    """
     user = request.user
     try:
         if user.avatar:

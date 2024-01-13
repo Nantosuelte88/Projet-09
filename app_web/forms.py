@@ -1,23 +1,22 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django import forms
 from .models import Ticket, Review
 from django.utils.safestring import mark_safe
 from django.forms.widgets import ClearableFileInput
-from django.utils.html import format_html
-
-from . import models
 
 
 class CustomImageWidget(ClearableFileInput):
+    """
+    Widget personnalisé pour l'affichage de la partie image d'un formulaire de ticket.
+    """
     def render(self, name, value, attrs=None, renderer=None):
         template = (
             '<br>'
             '<img src="%(image_url)s" alt="image actuelle de votre ticket"><br><br>'
             '<span class="img-delete">'
-            '<label for="%(id)s-clear_id">Effacer</label>'
+            '<label for="%(id)s-clear_id">Supprimer l\'image </label>'
             '<input type="checkbox" name="%(name)s-clear" id="%(id)s-clear_id">'
             '</span><br><br>'
-            '<label for="%(id)s">Modification</label><br>'
+            '<label for="%(id)s">Modifier l\'image</label><br>'
             '<input type="%(type)s" name="%(name)s" accept="%(accept)s" id="%(id)s">'
         )
 
@@ -32,11 +31,13 @@ class CustomImageWidget(ClearableFileInput):
 
 
 class TicketPostForm(forms.ModelForm):
+    """
+    Formulaire pour la création et la modification de tickets.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         if instance and instance.image:
-            # Modification avec une image existante
             self.fields['image'].widget = CustomImageWidget()
 
     class Meta:
@@ -46,10 +47,22 @@ class TicketPostForm(forms.ModelForm):
             'title': 'Titre',
         }
 
-    image = forms.ImageField(widget=forms.ClearableFileInput())
+    image = forms.ImageField(widget=forms.ClearableFileInput(), required=False)
 
 
 class ReviewPostForm(forms.ModelForm):
+    """
+    Formulaire pour la création de critiques associées à un ticket.
+    """
+    RATING_CHOICES = [
+        (0, '0'),
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+    ]
+
     class Meta:
         model = Review
         fields = ['headline', 'rating', 'body']
@@ -61,15 +74,6 @@ class ReviewPostForm(forms.ModelForm):
             'rating': 'Note',
             'body': 'Commentaire',
         }
-
-    RATING_CHOICES = [
-        (0, '0'),
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
-    ]
 
     rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'rating-radio'}),
                                required=True)

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Creation d'un ticket - LITRevu{% endblock title %}
 {% block content %}
 <div class="block-form tkt-page">
     {% if ticket %}
@@ -8,7 +9,7 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="btn-form">
-                    <button type="submit">Modifier</button>
+                    <button type="submit" aria-label="Modfier la demande de critique">Modifier</button>
                 </div>
             </form>
         {% endif %}
@@ -18,7 +19,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <div class="btn-form">
-                <button type="submit">Envoyer</button>
+                <button type="submit" aria-label="Publier la demande de critique">Envoyer</button>
             </div>
         </form>
     {% endif %}

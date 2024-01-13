@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Vos posts - LITRevu{% endblock title %}
 {% block content %}
 <h2>Vos Posts</h2>
 <div class="msg">
@@ -16,13 +17,6 @@
   {% for post in posts %}
     {% if post.post_type == 'TICKET' %}
         <div class="ticket">
-        {% if post.post.review_set.all %}
-          <div class="in review">
-            {% for review in post.post.review_set.all %}
-              {% include 'app_web/review_snippet.html' %}
-            {% endfor %}
-          </div>
-        {% endif %}
           {% include 'app_web/ticket_snippet.html' with ticket=post.post %}
       </div>
 

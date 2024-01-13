@@ -1,68 +1,63 @@
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from itertools import chain
-from django.db.models import Q
-from django.db.models import CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TicketPostForm, ReviewPostForm
 from .models import Ticket, Review, UserFollows, BlockedUser
-from .utils import get_users_viewable_reviews, get_users_viewable_tickets
-from .utils import get_star_rating
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from authentication.models import User
 
 from django.contrib import messages
 
-from . import models
-
-
-@login_required
-def home(request):
-    user = request.user
-    tickets = Ticket.objects.all()
-    reviews = Review.objects.all()
-    context = {
-        'username': user.username,
-        'avatar': user.avatar.url if user.avatar else None,
-        'tickets': tickets,
-        'reviews': reviews,
-    }
-    return render(request, 'app_web/home.html', context=context)
-
 
 @login_required
 def feed(request):
-    # Utilisateurs suivis par l'utilisateur connecté
+    """
+    Gère le flux des tickets et reviews à afficher pour l'utilisateur.
+    """
+    # Récupère les utilisateurs suivis
     following_users = request.user.following.all()
 
-    # Billets des utilisateurs suivis
+    # Tickets et Reviews des utilisateurs suivis
     tickets_followed = Ticket.objects.filter(user__in=following_users)
-
-    # Avis des utilisateurs suivis
     reviews_followed = Review.objects.filter(user__in=following_users)
 
-    # Billets et avis de l'utilisateur connecté
+    # Tickets et reviews de l'utilisateur connecté
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
 
-    # Avis en réponse aux billets de l'utilisateur connecté
+    # Reviews en réponse aux tickets de l'utilisateur connecté
     reviews_in_response = Review.objects.filter(ticket__user=request.user)
 
     # Liste temporaire pour stocker les ID des reviews déjà ajoutées
-    added_reviews_ids = []
+    added_reviews_ids = set()
+    added_reviews_response = set()
 
-    added_reviews_ids += [review.id for review in reviews_followed]
+    for review in reviews_followed:
+        added_reviews_ids.add(review.id)
 
-    posts = [{'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed] + \
-            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_followed] + \
-            [{'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response if
-             review.id not in added_reviews_ids] + \
-            [{'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets] + \
-            [{'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews]
+    for review in reviews_in_response:
+        added_reviews_response.add(review.id)
 
+    # Rassemble différents types de publications
+    posts = [
+        {'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed
+    ] + [
+        {'post': review, 'post_type': 'REVIEW'} for review in reviews_followed
+    ] + [
+        {'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response if
+        review.id not in added_reviews_ids and review.id not in added_reviews_response
+    ] + [
+        {'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets
+    ] + [
+        {'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews
+    ]
+
+    # Trie les publications par ordre décroissant de création
     posts.sort(key=lambda x: x['post'].time_created, reverse=True)
 
+    # Récupère les informations de notation pour l'affichage des étoiles en HTML
     for post in posts:
         if post['post_type'] == 'REVIEW':
             post['stars'] = {
@@ -84,13 +79,17 @@ def feed(request):
 
 @login_required
 def ticket_demand(request):
+    """
+    Gère la création de tickets via un formulaire.
+    """
     if request.method == 'POST':
         form = TicketPostForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            ticket.resize_image()
+            if ticket.image:
+                ticket.resize_image()
             messages.success(request, 'Ticket créé avec succès!')
             return redirect('feed')
         else:
@@ -104,6 +103,9 @@ def ticket_demand(request):
 
 @login_required
 def ticket_delete(request, ticket_id):
+    """
+    Gère la suppression d'un ticket via un formulaire (bouton).
+    """
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
     if request.user != ticket.user:
@@ -119,6 +121,9 @@ def ticket_delete(request, ticket_id):
 
 @login_required
 def ticket_update(request, ticket_id):
+    """
+    Gère la modification d'un ticket avec possibilité de supprimer ou remplacer l'image.
+    """
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
     if request.user != ticket.user:
@@ -155,6 +160,9 @@ def ticket_update(request, ticket_id):
 
 @login_required
 def review_add(request, ticket_id):
+    """
+    Gère la création d'une review en réponse à un ticket via un formulaire.
+    """
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
     # Vérifier si une critique existe déjà pour ce ticket
@@ -189,7 +197,9 @@ def review_add(request, ticket_id):
 
 @login_required
 def review_delete(request, review_id):
-    print(f"Deleting review with ID: {review_id}")
+    """
+    Gère la suppression d'une review via un formulaire (bouton).
+    """
     review = get_object_or_404(Review, pk=review_id)
 
     if request.user != review.user:
@@ -198,13 +208,16 @@ def review_delete(request, review_id):
 
     if request.method == 'POST':
         review.delete()
-        messages.success(request, 'Critique supprimé avec succès!')
+        messages.success(request, 'Critique supprimée avec succès!')
 
     return redirect('feed')
 
 
 @login_required
 def review_update(request, review_id):
+    """
+    Gère la modification d'une review.
+    """
     review = get_object_or_404(Review, pk=review_id)
     ticket = review.ticket
 
@@ -236,6 +249,9 @@ def review_update(request, review_id):
 
 @login_required
 def ticket_and_review(request):
+    """
+    Gère la création d'un ticket et d'une review en réponse à celui-ci.
+    """
     ticket_form = TicketPostForm()
     review_form = ReviewPostForm()
     if request.method == 'POST':
@@ -245,7 +261,8 @@ def ticket_and_review(request):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            ticket.resize_image()
+            if ticket.image:
+                ticket.resize_image()
 
             review = review_form.save(commit=False)
             review.ticket = ticket
@@ -268,6 +285,9 @@ def ticket_and_review(request):
 
 @login_required
 def posts_view(request):
+    """
+    Gère l'affichage des posts créés par l'utilisateur.
+    """
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
 
@@ -296,26 +316,40 @@ def posts_view(request):
 
 @login_required
 def subscription(request):
+    """
+    Gère les abonnements et les utilisateurs bloqués.
+
+    Permet à l'utilisateur de suivre d'autres utilisateurs,
+    de voir ses abonnés, et de gérer la liste d'utilisateurs bloqués.
+    """
+    # Récupération des utilisateurs suivis
     following_users = request.user.following.all()
+
+    # Récupération des utilisateurs bloqués
     blocked_users = User.objects.filter(blocking_users__user=request.user, blocking_users__can_access_tickets=False)
+
+    # Récupération des utilisateurs qui suivent l'utilisateur actuel
     followers = User.objects.filter(user_follows__followed_user=request.user)
 
     if request.method == 'POST':
+        # Récupération du pseudo à suivre dans le formulaire
         username_to_follow = request.POST.get('username_to_follow')
         user_to_follow = User.objects.filter(username=username_to_follow).first()
 
         if user_to_follow:
             if user_to_follow == request.user:
+                # Message d'erreur si l'utilisateur essaie de se suivre lui-même
                 messages.error(request, f"Vous ne pouvez pas vous suivre vous-même ;)")
             else:
                 # Vérifier si l'utilisateur cible est bloqué
                 if BlockedUser.objects.filter(user=request.user, blocked_user=user_to_follow).exists():
                     messages.error(request, f"Vous ne pouvez pas suivre un utilisateur bloqué.")
                 elif BlockedUser.objects.filter(user=user_to_follow, blocked_user=request.user).exists():
-                    # Même message d'erreur que quand l'utilisateur n'existe pas, à changer au besoin
+                    # Même message d'erreur que celui d'un utilisateur inexistant,
+                    # quand l'utilisateur est bloqué, à changer au besoin
                     messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
                 else:
-                    # Toggle du suivi de l'utilisateur
+                    # Gestion du suivi de l'utilisateur cible
                     user_follow, created = UserFollows.objects.get_or_create(user=request.user,
                                                                              followed_user=user_to_follow)
                     if created:
@@ -323,6 +357,7 @@ def subscription(request):
                     else:
                         messages.success(request, f"Vous suivez déjà {user_to_follow.username}.")
         else:
+            # Message d'erreur si l'utilisateur cible n'existe pas
             messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.")
 
     context = {'following_users': following_users, 'blocked_users': blocked_users, 'followers': followers}
@@ -330,9 +365,11 @@ def subscription(request):
     return render(request, 'app_web/subscription.html', context)
 
 
-
 @login_required
 def unfollow(request):
+    """
+    Gère le désabonnement à un utilisateur.
+    """
     if request.method == 'POST':
         user_to_unfollow_id = request.POST.get('user_to_unfollow')
         user_to_unfollow = get_object_or_404(User, id=user_to_unfollow_id)
@@ -343,16 +380,22 @@ def unfollow(request):
 
 @login_required
 def block_user(request):
+    """
+    Gère le blocage d'un utilisateur.
+    """
     if request.method == 'POST':
+        # Récupère l'ID de l'utilisateur à bloquer et obtient l'objet à bloquer.
         user_to_block_id = request.POST.get('user_to_block')
         user_to_block = get_object_or_404(User, id=user_to_block_id)
 
+        # Supprime toute relation de suivi entre l'utilisateur bloquant et l'utilisateur bloqué.
         if UserFollows.objects.filter(user=user_to_block, followed_user=request.user).exists():
             UserFollows.objects.filter(user=user_to_block, followed_user=request.user).delete()
 
         if UserFollows.objects.filter(user=request.user, followed_user=user_to_block).exists():
             UserFollows.objects.filter(user=request.user, followed_user=user_to_block).delete()
 
+        # Crée une nouvelle entrée dans la table BlockedUser pour enregistrer le blocage.
         BlockedUser.objects.create(user=request.user, blocked_user=user_to_block)
 
         # Supprimer les reviews de l'utilisateur bloqué en réponse aux tickets de l'utilisateur bloquant
@@ -371,6 +414,9 @@ def block_user(request):
 
 @login_required
 def unblock_user(request):
+    """
+    Gère le déblocage d'un utilisateur
+    """
     if request.method == 'POST':
         user_to_unblock_id = request.POST.get('user_to_unblock')
         user_to_unblock = get_object_or_404(User, id=user_to_unblock_id)
@@ -385,4 +431,7 @@ def unblock_user(request):
 
 @login_required
 def legal_mention(request):
+    """
+    Permet l'affichage de la page de mentions légales
+    """
     return render(request, 'app_web/mentions_legales.html')
