@@ -32,27 +32,23 @@ def feed(request):
 
     # Liste temporaire pour stocker les ID des reviews déjà ajoutées
     added_reviews_ids = set()
-    added_reviews_response = set()
 
     for review in reviews_followed:
         added_reviews_ids.add(review.id)
 
-    for review in reviews_in_response:
-        added_reviews_response.add(review.id)
-
     # Rassemble différents types de publications
     posts = [
-        {'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed
-    ] + [
-        {'post': review, 'post_type': 'REVIEW'} for review in reviews_followed
-    ] + [
-        {'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response if
-        review.id not in added_reviews_ids and review.id not in added_reviews_response
-    ] + [
-        {'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets
-    ] + [
-        {'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews
-    ]
+                {'post': ticket, 'post_type': 'TICKET'} for ticket in tickets_followed
+            ] + [
+                {'post': review, 'post_type': 'REVIEW'} for review in reviews_followed
+            ] + [
+                {'post': review, 'post_type': 'REVIEW'} for review in reviews_in_response if
+                review.id not in added_reviews_ids
+            ] + [
+                {'post': user_ticket, 'post_type': 'TICKET'} for user_ticket in user_tickets
+            ] + [
+                {'post': user_review, 'post_type': 'REVIEW'} for user_review in user_reviews
+            ]
 
     # Trie les publications par ordre décroissant de création
     posts.sort(key=lambda x: x['post'].time_created, reverse=True)
